@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b5574">
+<meta name="robots" content="noindex, nofollow">
+<title>RIAC — protótipo de redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>:root{
+  --bg:#f6f5f1; --surface:#ffffff; --surface-2:#f0eee8; --line:#e3e0d7; --line-2:#d3cfc3;
+  --ink:#122033; --ink-2:#33445a; --muted:#64748a;
+  --primary:#0b5574; --primary-600:#094a66; --primary-50:#e7f1f5; --primary-100:#cfe3ec;
+  --green:#1d7a5f; --green-50:#e5f3ee; --amber:#a8650b; --amber-50:#fbf1e1; --red:#b3362f; --red-50:#fbeceb;
+  --violet:#5866c4; --violet-50:#eceefb;
+  --r:14px; --r-sm:10px; --r-lg:20px;
+  --sh-1:0 1px 2px rgba(18,32,51,.05),0 1px 1px rgba(18,32,51,.03);
+  --sh-2:0 6px 24px -8px rgba(18,32,51,.16),0 2px 6px rgba(18,32,51,.05);
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Fraunces",Georgia,serif;
+  --fs:16px;
+}
+html.hc{ --bg:#fff; --surface:#fff; --surface-2:#f2f2f2; --line:#222; --line-2:#000; --ink:#000; --ink-2:#000; --muted:#222; --primary:#003a57; --primary-600:#002a40; --primary-50:#e0eef5; }
+*{box-sizing:border-box}
+html{font-size:var(--fs); scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{animation:none!important;transition:none!important} }
+body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:0}
+a{color:var(--primary);text-decoration-thickness:1px;text-underline-offset:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #f2b705;outline-offset:2px;border-radius:6px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+main:focus{outline:none}
+.skip{position:absolute;left:12px;top:-60px;background:var(--ink);color:#fff;padding:10px 14px;border-radius:8px;z-index:100}
+.skip:focus{top:12px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+h1,h2,h3,h4{line-height:1.2;margin:0 0 .4em;letter-spacing:-.01em}
+h1{font-family:var(--display);font-weight:500;font-size:clamp(2rem,4.4vw,3.1rem);letter-spacing:-.02em}
+h2{font-family:var(--display);font-weight:500;font-size:clamp(1.5rem,2.6vw,2rem)}
+h3{font-size:1.08rem;font-weight:650}
+p{margin:0 0 1em}
+.muted{color:var(--muted)} .small{font-size:.875rem} .xs{font-size:.78rem}
+.eyebrow{font-size:.78rem;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--primary)}
+
+/* Barra de protótipo */
+.proto{background:#16263a;color:#d7e2ee;font-size:.8rem;text-align:center;padding:6px 12px}
+.proto b{color:#fff}
+
+/* Topo */
+.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+.top .wrap{display:flex;align-items:center;gap:20px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700}
+.brand .mark{width:36px;height:36px;border-radius:10px;background:var(--primary);display:grid;place-items:center;color:#fff}
+.brand .t1{font-size:1.15rem;letter-spacing:.04em;line-height:1}
+.brand .t2{font-size:.7rem;color:var(--muted);font-weight:500;letter-spacing:0;line-height:1.2}
+.nav{display:flex;gap:2px;margin-left:12px}
+.nav a{padding:8px 12px;border-radius:9px;text-decoration:none;color:var(--ink-2);font-weight:550;font-size:.93rem}
+.nav a:hover{background:var(--surface-2)}
+.nav a[aria-current="page"]{background:var(--primary-50);color:var(--primary)}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.a11y{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.a11y button{background:none;border:0;padding:6px 10px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--ink-2)}
+.a11y button+button{border-left:1px solid var(--line)}
+.a11y button:hover{background:var(--surface-2)}
+
+/* Botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:11px;border:1px solid transparent;font-weight:600;font-size:.95rem;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,transform .05s;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--primary);color:#fff} .btn.pri:hover{background:var(--primary-600)}
+.btn.sec{background:var(--surface);border-color:var(--line-2);color:var(--ink)} .btn.sec:hover{background:var(--surface-2)}
+.btn.ghost{background:transparent;color:var(--primary);padding:8px 10px}
+.btn.ghost:hover{background:var(--primary-50)}
+.btn.danger{background:var(--surface);border-color:#e6bdb9;color:var(--red)}
+.btn.sm{padding:7px 12px;font-size:.86rem;border-radius:9px}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.ic{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ic.sm{width:16px;height:16px}
+
+/* Hero */
+.hero{background:linear-gradient(180deg,#eaf2f4 0%,var(--bg) 100%);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero .wrap{padding-top:56px;padding-bottom:44px;position:relative;z-index:1}
+.hero svg.waves{position:absolute;right:-40px;bottom:-10px;width:620px;opacity:.55;z-index:0}
+.hero p.lead{font-size:1.12rem;color:var(--ink-2);max-width:560px}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:14px}
+.seg button{border:0;background:none;padding:7px 14px;border-radius:9px;font-weight:600;font-size:.9rem;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.search{position:relative;max-width:720px}
+.search input{width:100%;height:60px;border-radius:16px;border:1px solid var(--line-2);background:var(--surface);padding:0 130px 0 52px;font-size:1.05rem;box-shadow:var(--sh-2)}
+.search input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-100),var(--sh-2)}
+.search .ic.lead{position:absolute;left:18px;top:20px;color:var(--muted)}
+.search .btn{position:absolute;right:8px;top:8px;height:44px}
+.suggest{position:absolute;left:0;right:0;top:66px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh-2);z-index:30;overflow:hidden}
+.suggest a{display:flex;gap:12px;align-items:center;padding:12px 16px;text-decoration:none;color:var(--ink);border-top:1px solid var(--line)}
+.suggest a:first-child{border-top:0}
+.suggest a:hover,.suggest a.on{background:var(--primary-50)}
+.suggest .tag{margin-left:auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{border:1px solid var(--line-2);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.86rem;cursor:pointer;color:var(--ink-2);text-decoration:none}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* Ações rápidas */
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-28px;position:relative;z-index:2}
+.qa{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;text-decoration:none;color:var(--ink);box-shadow:var(--sh-1);display:flex;flex-direction:column;gap:10px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.qa:hover{border-color:var(--primary);box-shadow:var(--sh-2);transform:translateY(-2px)}
+.qa .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--primary-50);color:var(--primary)}
+.qa b{font-size:1.02rem}
+.qa span{font-size:.86rem;color:var(--muted)}
+
+/* Secções */
+section.blk{padding:52px 0}
+.head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:22px}
+.head p{margin:0}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh-1)}
+.card.link{text-decoration:none;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+.card.link:hover{border-color:var(--primary);box-shadow:var(--sh-2)}
+.card h3 a{color:inherit;text-decoration:none}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.tag.on{background:var(--green-50);color:var(--green)}
+.tag.warn{background:var(--amber-50);color:var(--amber)}
+.tag.off{background:var(--red-50);color:var(--red)}
+.tag.blue{background:var(--primary-50);color:var(--primary)}
+.tag.vio{background:var(--violet-50);color:var(--violet)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+
+.svc{display:flex;flex-direction:column;gap:10px;height:100%}
+.svc .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:6px}
+.theme{display:flex;gap:14px;align-items:flex-start}
+.theme .ico{width:40px;height:40px;border-radius:11px;background:var(--surface-2);display:grid;place-items:center;color:var(--primary);flex:none}
+
+.event{display:flex;gap:14px;align-items:center;text-decoration:none;color:var(--ink);padding:16px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface)}
+.event:hover{border-color:var(--violet)}
+.event .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--violet-50);color:var(--violet);flex:none}
+
+/* Espera ao vivo */
+.live{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+.waitrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.waitrow:first-of-type{border-top:0}
+.bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden;flex:1}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--green)}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(29,122,95,.5);animation:p 2s infinite}
+@keyframes p{70%{box-shadow:0 0 0 8px rgba(29,122,95,0)}100%{box-shadow:0 0 0 0 rgba(29,122,95,0)}}
+
+/* Canais */
+.channels{background:var(--ink);color:#e6edf5;border-radius:var(--r-lg);padding:32px;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:24px}
+.channels h2{color:#fff}
+.channels .ch{border-left:1px solid rgba(255,255,255,.14);padding-left:20px}
+.channels a{color:#fff}
+.channels .big{font-size:1.5rem;font-weight:700;color:#fff;text-decoration:none;display:block;margin:4px 0}
+
+/* Página interna */
+.crumbs{font-size:.85rem;color:var(--muted);padding:18px 0 0}
+.crumbs a{color:var(--muted)}
+.pagehead{padding:18px 0 26px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.layout{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
+.sticky{position:sticky;top:88px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:11px 14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--primary);border-color:var(--primary)}
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:var(--surface)}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--primary)}
+.check.done{background:var(--green-50);border-color:#bfe0d4}
+.progress{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin:6px 0 16px}
+.progress i{display:block;height:100%;background:var(--green);transition:width .3s}
+.price{font-size:2.4rem;font-weight:700;letter-spacing:-.02em;font-family:var(--display)}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0}
+dl.kv dt{color:var(--muted);font-size:.88rem} dl.kv dd{margin:0;font-weight:550}
+
+/* Formulários */
+label.f{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+.inp,select.inp,textarea.inp{width:100%;height:48px;border:1px solid var(--line-2);border-radius:11px;padding:0 14px;background:var(--surface)}
+textarea.inp{height:auto;padding:12px 14px;min-height:110px}
+.inp:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-100)}
+.field{margin-bottom:16px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:5px}
+.err{font-size:.82rem;color:var(--red);margin-top:5px}
+.radios{display:grid;gap:8px}
+.radio{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--surface)}
+.radio:has(input:checked){border-color:var(--primary);background:var(--primary-50)}
+.radio input{accent-color:var(--primary);width:18px;height:18px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.row.sb{justify-content:space-between}
+
+/* Stepper */
+.steps{display:flex;gap:6px;margin:0 0 26px;padding:0;list-style:none;counter-reset:s}
+.steps li{flex:1;counter-increment:s;font-size:.82rem;font-weight:600;color:var(--muted)}
+.steps li::before{content:"";display:block;height:4px;border-radius:99px;background:var(--line);margin-bottom:8px}
+.steps li.on{color:var(--ink)} .steps li.on::before{background:var(--primary)}
+.steps li.done::before{background:var(--green)}
+
+/* Lista de lojas */
+.storelist{display:grid;gap:10px}
+.store{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);cursor:pointer;text-align:left;width:100%}
+.store:hover{border-color:var(--primary)}
+.store.sel,.store[aria-pressed="true"]{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-100)}
+.store .pin{width:38px;height:38px;border-radius:10px;background:var(--primary-50);color:var(--primary);display:grid;place-items:center;flex:none}
+.store h4{margin:0 0 2px;font-size:1rem}
+#map{height:560px;border-radius:var(--r);border:1px solid var(--line);background:#dfe9ee}
+.mapwrap{display:grid;grid-template-columns:420px 1fr;gap:16px}
+.mapwrap .storelist{max-height:560px;overflow:auto;padding-right:4px}
+
+/* Calendário */
+.cal{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.cal .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal .mh b{font-size:1.05rem;text-transform:capitalize}
+.cal table{width:100%;border-collapse:collapse;table-layout:fixed}
+.cal th{font-size:.75rem;color:var(--muted);font-weight:600;padding-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.cal td{padding:3px;text-align:center}
+.day{width:100%;aspect-ratio:1/1;max-height:54px;border-radius:11px;border:1px solid transparent;background:none;cursor:pointer;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.95rem}
+.day:hover:not([disabled]){border-color:var(--primary)}
+.day[disabled]{color:#b6b9bd;cursor:not-allowed;font-weight:500}
+.day .av{width:6px;height:6px;border-radius:50%}
+.day.today{box-shadow:inset 0 0 0 1px var(--line-2)}
+.day[aria-pressed="true"]{background:var(--primary);color:#fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:12px}
+.legend span{display:flex;gap:6px;align-items:center}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.slot{border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:10px 0;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums}
+.slot:hover:not([disabled]){border-color:var(--primary);color:var(--primary)}
+.slot[disabled]{text-decoration:line-through;color:#b6b9bd;background:var(--surface-2);cursor:not-allowed;border-color:var(--line)}
+.slot[aria-pressed="true"]{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* Senha */
+.ticket{background:var(--surface);border-radius:24px;border:1px solid var(--line);box-shadow:var(--sh-2);overflow:hidden;max-width:440px;margin:0 auto}
+.ticket .tt{background:var(--primary);color:#fff;padding:22px 24px}
+.ticket .num{font-family:var(--display);font-size:5rem;font-weight:500;line-height:1;letter-spacing:-.02em;margin:8px 0}
+.ticket .tb{padding:22px 24px}
+.ticket .perf{height:0;border-top:2px dashed var(--line-2);margin:0 18px;position:relative}
+.ticket .perf::before,.ticket .perf::after{content:"";position:absolute;top:-13px;width:24px;height:24px;border-radius:50%;background:var(--bg)}
+.ticket .perf::before{left:-30px}.ticket .perf::after{right:-30px}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.stat div{background:var(--surface-2);border-radius:12px;padding:12px 6px}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.75rem;color:var(--muted)}
+.qr{width:112px;height:112px;display:block}
+.callnow{background:var(--green);color:#fff;border-radius:14px;padding:16px;text-align:center;font-weight:600;animation:glow 1.6s infinite alternate}
+@keyframes glow{from{box-shadow:0 0 0 0 rgba(29,122,95,.4)}to{box-shadow:0 0 0 10px rgba(29,122,95,0)}}
+.queues{display:grid;gap:10px}
+.queue{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);cursor:pointer;width:100%;text-align:left}
+.queue:hover{border-color:var(--primary)}
+.queue .letter{width:46px;height:46px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:1.2rem;flex:none}
+
+/* Área pessoal */
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{position:relative;padding:0 0 18px 28px}
+.timeline li::before{content:"";position:absolute;left:6px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--line-2)}
+.timeline li::after{content:"";position:absolute;left:11px;top:20px;bottom:0;width:2px;background:var(--line)}
+.timeline li:last-child::after{display:none}
+.timeline li.done::before{background:var(--green)}
+.timeline li.cur::before{background:var(--primary);box-shadow:0 0 0 4px var(--primary-100)}
+.empty{text-align:center;padding:36px 16px;color:var(--muted);border:1px dashed var(--line-2);border-radius:var(--r)}
+.alert{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:12px;background:var(--amber-50);color:#6d4206;border:1px solid #f0d6a8}
+.alert.info{background:var(--primary-50);color:var(--primary-600);border-color:var(--primary-100)}
+.alert.ok{background:var(--green-50);color:#165c47;border-color:#bfe0d4}
+
+/* Rodapé */
+footer{background:#0f1b2b;color:#aebccc;margin-top:40px;padding:48px 0 100px;font-size:.9rem}
+footer a{color:#dbe5ef;text-decoration:none} footer a:hover{text-decoration:underline}
+footer .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+footer h4{color:#fff;font-size:.95rem;margin-bottom:12px}
+footer ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+
+/* Assistente */
+.fab{position:fixed;right:22px;bottom:22px;z-index:50;background:var(--ink);color:#fff;border:0;border-radius:999px;padding:14px 18px;display:flex;gap:10px;align-items:center;font-weight:600;cursor:pointer;box-shadow:var(--sh-2)}
+.chat{position:fixed;right:22px;bottom:84px;width:380px;max-width:calc(100vw - 24px);height:540px;max-height:calc(100vh - 120px);background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 60px -10px rgba(18,32,51,.35);z-index:60;display:flex;flex-direction:column;overflow:hidden}
+.chat header{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.chat .msgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:.92rem}
+.msg.bot{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.me{background:var(--primary);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chat form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.chat form input{flex:1;height:44px;border:1px solid var(--line-2);border-radius:11px;padding:0 12px}
+
+/* Toast e modal */
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:80;box-shadow:var(--sh-2);font-weight:500;max-width:90vw}
+.modal-bg{position:fixed;inset:0;background:rgba(15,27,43,.45);z-index:70;display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);border-radius:20px;max-width:520px;width:100%;padding:26px;box-shadow:var(--sh-2);max-height:90vh;overflow:auto}
+
+/* Navegação inferior (mobile) */
+.bnav{display:none}
+
+@media (max-width:1020px){
+  .nav{display:none}
+  .quick{grid-template-columns:repeat(2,1fr)}
+  .g4{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(2,1fr)}
+  .layout{grid-template-columns:1fr} .sticky{position:static}
+  .live{grid-template-columns:1fr}
+  .channels{grid-template-columns:1fr 1fr}
+  .channels .ch:nth-child(3){border-left:0;padding-left:0}
+  .mapwrap{grid-template-columns:1fr} #map{height:360px} .mapwrap .storelist{max-height:none}
+  footer .cols{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .top .wrap{height:60px}
+  .brand .t2{display:none}
+  .a11y{display:none}
+  .hero .wrap{padding-top:34px;padding-bottom:40px}
+  .hero svg.waves{width:380px;opacity:.35}
+  .search input{height:54px;padding-right:16px;font-size:1rem}
+  .search .btn{display:none}
+  .hero .chips{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding-bottom:4px;scrollbar-width:none}
+  .hero .chips .chip{white-space:nowrap}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .quick{gap:10px}
+  .qa{padding:14px} .qa span{display:none}
+  section.blk{padding:36px 0}
+  .head{flex-direction:column;align-items:flex-start}
+  .channels{grid-template-columns:1fr;padding:24px}
+  .channels .ch{border-left:0;padding-left:0;border-top:1px solid rgba(255,255,255,.14);padding-top:16px}
+  footer .cols{grid-template-columns:1fr}
+  .fab{bottom:80px;right:14px;padding:12px}
+  .fab span{display:none}
+  .chat{right:12px;bottom:140px;height:calc(100vh - 220px)}
+  .bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:45;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .bnav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.7rem;font-weight:600;color:var(--muted);text-decoration:none;padding:4px 0}
+  .bnav a[aria-current="page"]{color:var(--primary)}
+  .toast{bottom:84px}
+  .ticket .num{font-size:4rem}
+}
+</style>
+</head>
+<body>
+<script>/* ===================== DADOS ===================== */
+// Horários (minutos desde 00:00), índice 0=Dom … 6=Sáb
+const H = {
+  A: { label: "Segunda a sexta, 09h00–12h00 e 13h00–16h30", d: [null, [[540,720],[780,990]], [[540,720],[780,990]], [[540,720],[780,990]], [[540,720],[780,990]], [[540,720],[780,990]], null] },
+  B: { label: "Segunda a sexta, 09h00–12h30 e 13h30–16h30", d: [null, [[540,750],[810,990]], [[540,750],[810,990]], [[540,750],[810,990]], [[540,750],[810,990]], [[540,750],[810,990]], null] },
+  C: { label: "Segunda a sexta, 09h00–18h00", d: [null, [[540,1080]], [[540,1080]], [[540,1080]], [[540,1080]], [[540,1080]], null] },
+  D: { label: "Segunda a sexta, 09h00–16h30", d: [null, [[540,990]], [[540,990]], [[540,990]], [[540,990]], [[540,990]], null] },
+  E: { label: "Seg–sex 10h00–22h00 · Sáb 10h00–18h00 · Dom 10h00–13h30", d: [[[600,810]], [[600,1320]], [[600,1320]], [[600,1320]], [[600,1320]], [[600,1320]], [[600,1080]]] },
+  F: { label: "Segunda a sexta, 09h00–18h00 · Sábado, 09h00–13h00", d: [null, [[540,1080]], [[540,1080]], [[540,1080]], [[540,1080]], [[540,1080]], [[540,780]]] },
+  G: { label: "Segunda a sexta, 09h00–17h00", d: [null, [[540,1020]], [[540,1020]], [[540,1020]], [[540,1020]], [[540,1020]], null] },
+};
+
+const ILHAS = ["São Miguel","Terceira","Faial","Pico","São Jorge","Graciosa","Santa Maria","Flores","Corvo"];
+
+// [id, nome, ilha, morada, cp, localidade, horário, lat, lng, riae?]
+const LOJAS_RAW = [
+  ["pdl","RIAC Ponta Delgada","São Miguel","Rua Conselheiro Dr. Luís Bettencourt de Medeiros Câmara, n.º 28","9500-058","Ponta Delgada","C",37.7412,-25.6687],
+  ["pdl-riae","RIAC-RIAE Ponta Delgada","São Miguel","Rua de São João, 55 (Ed. da Dir. Regional do Empreendedorismo)","9500-107","Ponta Delgada","G",37.7398,-25.6640,1],
+  ["parque","RIAC Parque Atlântico","São Miguel","C. C. Parque Atlântico, Loja 1.033, Rua da Juventude","9500-211","Ponta Delgada","E",37.7525,-25.6639],
+  ["achada","RIAC Achada","São Miguel","Edifício da Junta de Freguesia, Rua do Vigário","9630-019","Nordeste","A",37.8510,-25.2580],
+  ["aguadepau","RIAC Água de Pau","São Miguel","Edifício da Junta de Freguesia, Rua da Ribeira, 27","9560-217","Lagoa","A",37.7225,-25.5120],
+  ["arrifes","RIAC Arrifes","São Miguel","Casa do Povo dos Arrifes, Largo da Saúde","9500-363","Ponta Delgada","A",37.7625,-25.7000],
+  ["capelas","RIAC Capelas","São Miguel","Edifício Polivalente, Rua N.ª Sr.ª da Apresentação, 3","9545-149","Ponta Delgada","A",37.8340,-25.6900],
+  ["furnas","RIAC Furnas","São Miguel","Casa do Povo, Rua Padre José Jacinto Botelho, 44","9675-061","Povoação","A",37.7720,-25.3120],
+  ["ginetes","RIAC Ginetes","São Miguel","Sociedade Filarmónica Minerva, Grota do Lodo, n.º 1","9555-093","Ponta Delgada","A",37.8570,-25.8510],
+  ["maia","RIAC Maia","São Miguel","Santa Casa da Misericórdia, Rua Santa Catarina, s/n","9625-321","Ribeira Grande","A",37.8280,-25.3930],
+  ["rosario","RIAC N.ª Sr.ª do Rosário","São Miguel","Junta de Freguesia, Rua Dr. José Pereira Botelho, 45","9560-097","Lagoa","A",37.7450,-25.5730],
+  ["nordeste","RIAC Nordeste","São Miguel","Rua D. Maria do Rosário, n.º 11","9630-144","Nordeste","A",37.8310,-25.1470],
+  ["pgarca","RIAC Ponta Garça","São Miguel","Polivalente de Ponta Garça, Rua da Igreja","9680-447","Vila Franca do Campo","A",37.7180,-25.3800],
+  ["povoacao","RIAC Povoação","São Miguel","Instituto da Segurança Social, Rua Infante Sagres, 15","9650-422","Povoação","A",37.7480,-25.2440],
+  ["rpeixe","RIAC Rabo de Peixe","São Miguel","Centro Comunitário e de Juventude, Rua Infante D. Henrique","9600-130","Ribeira Grande","B",37.8110,-25.5850],
+  ["rgrande","RIAC Ribeira Grande","São Miguel","Central de Camionagem, Av. Luís de Camões","9600-563","Ribeira Grande","B",37.8210,-25.5200],
+  ["sroque-sm","RIAC São Roque","São Miguel","Junta de Freguesia (Rosto do Cão), Rua Dr. José de Almeida Pavão Júnior","9500-715","Ponta Delgada","A",37.7480,-25.6360],
+  ["solmar","RIAC Solmar – VFC","São Miguel","Espaço Comercial Sol*Mar, Loja 4, Av. das Comunidades Emigrantes","9680-104","Vila Franca do Campo","C",37.7160,-25.4340],
+  ["angra","RIAC-RIAE Angra do Heroísmo","Terceira","Rua da Sé, 144 – R/C","9700-191","Angra do Heroísmo","F",38.6550,-27.2180,1],
+  ["agualva","RIAC Agualva","Terceira","Edifício Multi-Serviços, Cabouco da Igreja","9760-020","Praia da Vitória","A",38.7740,-27.1850],
+  ["altares","RIAC Altares","Terceira","Casa do Povo dos Altares, Ao Lugar n.º 35","9700-301","Angra do Heroísmo","A",38.7870,-27.2930],
+  ["biscoitos","RIAC Biscoitos","Terceira","Junta de Freguesia, Largo Francisco Maria Brum","9760-051","Praia da Vitória","A",38.8000,-27.2570],
+  ["hsei","RIAC Hospital Santo Espírito","Terceira","Canada do Breado","9700-049","Angra do Heroísmo","A",38.6640,-27.2350],
+  ["lajes-t","RIAC Lajes","Terceira","Casa do Povo das Lajes, Rua Padre Lourenço Ávila","9760-295","Praia da Vitória","A",38.7620,-27.0980],
+  ["lameirinho","RIAC Lameirinho","Terceira","Urb. do Lameirinho, Rua Ilha de São Miguel, Lote 62 A","9700-111","Angra do Heroísmo","A",38.6610,-27.2120],
+  ["pjudeu","RIAC Porto Judeu","Terceira","Casa do Povo do Porto Judeu, Caminho da Esperança","9700-368","Angra do Heroísmo","D",38.6480,-27.1230],
+  ["psanto","RIAC Posto Santo","Terceira","Junta de Freguesia, Largo do Terreiro","9700-238","Angra do Heroísmo","A",38.6720,-27.2360],
+  ["praia","RIAC Praia da Vitória","Terceira","Rua de Jesus, n.º 57","9760-478","Praia da Vitória","C",38.7330,-27.0660],
+  ["sbarbara","RIAC Santa Bárbara","Terceira","Casa do Povo, Ladeira das Seis, n.º 10","9700-471","Angra do Heroísmo","A",38.6930,-27.3300],
+  ["ssebastiao","RIAC São Sebastião","Terceira","Junta de Freguesia, À Praça","9700-613","Angra do Heroísmo","D",38.6630,-27.0950],
+  ["vilanova","RIAC Vila Nova","Terceira","Centro Multiserviços, Caminho da Abrigada, ao Paço","9760-701","Praia da Vitória","A",38.7870,-27.1500],
+  ["horta","RIAC Horta","Faial","Rua do Castelo, n.º 92","9900-069","Horta","A",38.5330,-28.6300],
+  ["cbranco","RIAC Castelo Branco","Faial","Junta de Freguesia, Rua Casimiro Gonçalves, n.º 2","9900-323","Horta","A",38.5250,-28.7150],
+  ["cedros","RIAC Cedros","Faial","Polivalente da Casa do Povo, Rua da Praça","9900-341","Horta","A",38.6300,-28.6850],
+  ["flamengos","RIAC Flamengos","Faial","Edifício Polivalente, Rua Nova Artista Flamenguense","9900-401","Horta","A",38.5480,-28.6450],
+  ["sroque-p","RIAC-RIAE São Roque","Pico","Rua do Cais, n.º 17","9940-355","São Roque do Pico","D",38.5250,-28.3200,1],
+  ["lajes-p","RIAC Lajes do Pico","Pico","Rua Capitão-Mor Garcia Gonçalves Madruga, 21","9930-129","Lajes do Pico","A",38.3950,-28.2550],
+  ["madalena","RIAC Madalena","Pico","Largo Cardeal Costa Nunes, n.º 12B","9950-324","Madalena","A",38.5360,-28.5280],
+  ["piedade","RIAC Piedade","Pico","Casa do Povo, Caminho do Calhau, 5","9930-204","Lajes do Pico","A",38.4200,-28.0600],
+  ["smateus-p","RIAC São Mateus","Pico","Casa do Povo, Rua D. Arquimínio R. Costa","9950-532","Madalena","A",38.4250,-28.4480],
+  ["velas","RIAC-RIAE Velas","São Jorge","Rua Dr. Manuel de Arriaga, n.º 21","9800-549","Velas","D",38.6810,-28.2080,1],
+  ["calheta","RIAC Calheta","São Jorge","Rua José Faustino Silveira e Sousa","9850-037","Calheta","A",38.6000,-28.0100],
+  ["ngrande","RIAC Norte Grande","São Jorge","Casa do Povo, Estrada Regional","9800-132","Velas","A",38.6720,-28.0700],
+  ["topo","RIAC Topo","São Jorge","Rua Padre Fernando Lemos","9875-171","Calheta","A",38.5500,-27.7600],
+  ["scruz-g","RIAC-RIAE Santa Cruz da Graciosa","Graciosa","Av. Mouzinho de Albuquerque, s/n","9880-320","Santa Cruz","A",39.0870,-28.0060,1],
+  ["guadalupe","RIAC Guadalupe","Graciosa","Casa do Povo, Caminho da Igreja","9880-021","Santa Cruz","A",39.0550,-28.0100],
+  ["luz","RIAC Luz","Graciosa","Rua da Igreja, n.º 3","9880-150","Santa Cruz","A",39.0200,-27.9900],
+  ["smateus-g","RIAC São Mateus","Graciosa","Junta de Freguesia, Rua Barão da Fonte do Mato","9880-226","Santa Cruz","A",39.0500,-27.9700],
+  ["vporto","RIAC-RIAE Vila do Porto","Santa Maria","Rua Teófilo de Braga, n.º 28","9580-535","Vila do Porto","B",36.9440,-25.1450,1],
+  ["sespirito","RIAC Santo Espírito","Santa Maria","Casa do Povo, Rua da Igreja","9580-221","Vila do Porto","A",36.9540,-25.0560],
+  ["scruz-f","RIAC Santa Cruz das Flores","Flores","Praça Marquês de Pombal","9970-314","Santa Cruz das Flores","A",39.4530,-31.1270],
+  ["fajag","RIAC Fajã Grande","Flores","Casa do Povo, Rua Senador André Freitas","9960-040","Lajes das Flores","A",39.4570,-31.2630],
+  ["lajes-f","RIAC Lajes das Flores","Flores","Casa do Povo, Av. do Emigrante, n.º 8","9960-431","Lajes das Flores","A",39.3770,-31.1750],
+  ["pdl-f","RIAC Ponta Delgada (Flores)","Flores","EB1 de Ponta Delgada das Flores, Estrada Regional","9970-071","Santa Cruz das Flores","A",39.5170,-31.2130],
+  ["corvo","RIAC Corvo","Corvo","Rua do Jogo da Bola","9980-020","Corvo","A",39.6720,-31.1130],
+];
+const LOJAS = LOJAS_RAW.map(r => ({ id:r[0], nome:r[1], ilha:r[2], morada:r[3], cp:r[4], local:r[5], h:H[r[6]], lat:r[7], lng:r[8], riae:!!r[9] }));
+
+const TEMAS = [
+  { id:"carteira", nome:"Carteira de Documentos", sub:"Cartão de Cidadão, carta de condução", ic:"id" },
+  { id:"viagem", nome:"Documentos de Viagem", sub:"Passaporte eletrónico", ic:"plane" },
+  { id:"digitais", nome:"Documentos Digitais", sub:"Chave Móvel Digital", ic:"phone" },
+  { id:"certidoes", nome:"Certidões", sub:"Predial, civil, comercial", ic:"doc" },
+  { id:"justica", nome:"Justiça e Defesa", sub:"Registo criminal", ic:"scale" },
+  { id:"financas", nome:"Finanças", sub:"IRS, declarações", ic:"euro" },
+  { id:"seguranca", nome:"Segurança Social", sub:"Pensões, subsídios", ic:"shield" },
+  { id:"apoios", nome:"Apoios", sub:"Apoios sociais e à habitação", ic:"heart" },
+  { id:"candidaturas", nome:"Candidaturas", sub:"Habitação, estágios, incentivos", ic:"form" },
+  { id:"licencas", nome:"Licenças", sub:"Pesca, caça, náutica", ic:"badge" },
+  { id:"pagamentos", nome:"Pagamentos", sub:"EDA, cobranças", ic:"card" },
+  { id:"produtos", nome:"Produtos", sub:"Livros, música, edições regionais", ic:"bag" },
+];
+
+// fila: A Documentos · B Registos e Certidões · C Pagamentos · D Apoios e Candidaturas · E Empresas
+const SERVICOS = [
+  { id:"cartao-cidadao", nome:"Cartão de Cidadão", tema:"carteira", pub:"cid", fila:"A", modos:["presencial","agendar"], dur:"15 min", custo:"Desde 15 €", freq:1,
+    resumo:"Pedido, renovação ou substituição do documento de identificação que reúne o n.º de identificação civil, NIF, n.º de utente de saúde e n.º de Segurança Social." },
+  { id:"passaporte", nome:"Passaporte Eletrónico Português", tema:"viagem", pub:"cid", fila:"A", modos:["presencial","agendar"], dur:"20 min", custo:"Ver tabela em vigor", freq:1,
+    resumo:"Pedido de passaporte eletrónico, com recolha de dados biométricos na loja." },
+  { id:"chave-movel", nome:"Chave Móvel Digital", tema:"digitais", pub:"cid", fila:"A", modos:["online","presencial","agendar"], dur:"10 min", custo:"Gratuito", freq:1,
+    resumo:"Ativação da assinatura e autenticação digital no telemóvel para aceder a serviços públicos online." },
+  { id:"carta-conducao", nome:"Revalidação da Carta de Condução", tema:"carteira", pub:"cid", fila:"A", modos:["presencial","agendar"], dur:"15 min", custo:"Ver tabela em vigor",
+    resumo:"Revalidação ou substituição da carta de condução." },
+  { id:"registo-criminal", nome:"Certificado de Registo Criminal", tema:"justica", pub:"cid", fila:"B", modos:["online","presencial"], dur:"5 min", custo:"Ver tabela em vigor", freq:1,
+    resumo:"Pedido do certificado de registo criminal de pessoa singular." },
+  { id:"registo-criminal-pc", nome:"Registo Criminal de Pessoa Coletiva", tema:"justica", pub:"emp", fila:"E", modos:["online","presencial"], dur:"5 min", custo:"Ver tabela em vigor", freq:1,
+    resumo:"Certificado de registo criminal de empresas e outras pessoas coletivas." },
+  { id:"certidao-predial", nome:"Certidão Permanente Predial", tema:"certidoes", pub:"cid", fila:"B", modos:["online","presencial"], dur:"5 min", custo:"Ver tabela em vigor",
+    resumo:"Certidão com a descrição e os registos em vigor de um imóvel." },
+  { id:"certidao-nascimento", nome:"Certidão de Nascimento", tema:"certidoes", pub:"cid", fila:"B", modos:["online","presencial"], dur:"5 min", custo:"Ver tabela em vigor",
+    resumo:"Pedido de certidão de nascimento em papel ou online." },
+  { id:"certidao-comercial", nome:"Certidão Permanente Comercial", tema:"certidoes", pub:"emp", fila:"E", modos:["online","presencial"], dur:"5 min", custo:"Ver tabela em vigor",
+    resumo:"Acesso à certidão permanente do registo comercial de uma empresa." },
+  { id:"irs", nome:"Apoio à Declaração de IRS", tema:"financas", pub:"cid", fila:"B", modos:["presencial","agendar"], dur:"30 min", custo:"Gratuito",
+    resumo:"Apoio no preenchimento e submissão da declaração anual de IRS." },
+  { id:"pensao-velhice", nome:"Pedido de Pensão de Velhice", tema:"seguranca", pub:"cid", fila:"D", modos:["presencial","agendar"], dur:"30 min", custo:"Gratuito",
+    resumo:"Entrega do requerimento de pensão de velhice da Segurança Social." },
+  { id:"abono", nome:"Abono de Família", tema:"seguranca", pub:"cid", fila:"D", modos:["online","presencial"], dur:"15 min", custo:"Gratuito",
+    resumo:"Requerimento do abono de família para crianças e jovens." },
+  { id:"compamid", nome:"COMPAMID", tema:"apoios", pub:"cid", fila:"D", modos:["online","presencial","agendar"], dur:"20 min", custo:"Gratuito", destaque:1,
+    resumo:"Complemento para a Aquisição de Medicamentos pelos Idosos — para pensionistas residentes nos Açores com 65 ou mais anos (e outros casos previstos)." },
+  { id:"renovar-arrendar", nome:"Renovar para Arrendar", tema:"candidaturas", pub:"cid", fila:"D", modos:["online","presencial","agendar"], dur:"30 min", custo:"Gratuito", destaque:1,
+    resumo:"Apoio a obras de reabilitação, reparação e beneficiação de habitações devolutas destinadas a arrendamento." },
+  { id:"chaos-melhoras", nome:"Chãos de Melhoras", tema:"candidaturas", pub:"cid", fila:"D", modos:["online","presencial","agendar"], dur:"30 min", custo:"Gratuito", destaque:1,
+    resumo:"Incentivo à aquisição da propriedade do solo pelos proprietários da benfeitoria nele edificada." },
+  { id:"habitacao-propria", nome:"Apoio à Aquisição de Habitação Própria", tema:"candidaturas", pub:"cid", fila:"D", modos:["online","presencial","agendar"], dur:"30 min", custo:"Gratuito", destaque:1,
+    resumo:"Candidatura à comparticipação na aquisição de habitação própria e permanente." },
+  { id:"carta-navegador", nome:"Renovação da Carta de Navegador de Recreio", tema:"licencas", pub:"cid", fila:"A", modos:["online","presencial"], dur:"10 min", custo:"Ver tabela em vigor", freq:1,
+    resumo:"Renovação da carta obrigatória para navegar em determinadas embarcações e áreas de recreio." },
+  { id:"licenca-pesca", nome:"Licença de Pesca Lúdica", tema:"licencas", pub:"cid", fila:"C", modos:["online","presencial"], dur:"5 min", custo:"Ver tabela em vigor",
+    resumo:"Emissão de licença de pesca lúdica apeada, submarina ou embarcada." },
+  { id:"licenca-caca", nome:"Licença de Caça", tema:"licencas", pub:"cid", fila:"C", modos:["presencial"], dur:"10 min", custo:"Ver tabela em vigor",
+    resumo:"Emissão e renovação da licença de caça." },
+  { id:"pagamento-eda", nome:"Pagamento de Eletricidade (EDA)", tema:"pagamentos", pub:"cid", fila:"C", modos:["online","presencial"], dur:"3 min", custo:"Sem custos adicionais", freq:1,
+    resumo:"Pagamento de faturas de eletricidade da EDA numa loja RIAC ou por referência." },
+  { id:"parh", nome:"Programa Apoio Restauração e Hotelaria (PARH)", tema:"candidaturas", pub:"emp", fila:"E", modos:["online","presencial","agendar"], dur:"45 min", custo:"Gratuito", destaque:1,
+    resumo:"Incentivo à utilização de produtos «Marca Açores» e hortofrutícolas regionais na restauração e hotelaria." },
+  { id:"pir", nome:"Projeto de Interesse Regional (PIR)", tema:"candidaturas", pub:"emp", fila:"E", modos:["online","agendar"], dur:"60 min", custo:"Gratuito", destaque:1,
+    resumo:"Reconhecimento e acompanhamento de investimentos com efeito estruturante em setores estratégicos." },
+  { id:"emprego-mais", nome:"Emprego +", tema:"candidaturas", pub:"emp", fila:"E", modos:["online","presencial","agendar"], dur:"45 min", custo:"Gratuito", destaque:1, freq:1,
+    resumo:"Comparticipação de custos salariais na criação de postos de trabalho por beneficiários do COMPETIR +." },
+  { id:"contratar-estavel", nome:"Contratar Estável", tema:"candidaturas", pub:"emp", fila:"E", modos:["online","presencial"], dur:"30 min", custo:"Gratuito", freq:1,
+    resumo:"Apoio à contratação sem termo e à conversão de contratos a termo." },
+  { id:"competir", nome:"Competir+ / PME — Balcão dos Fundos", tema:"candidaturas", pub:"emp", fila:"E", modos:["online","agendar"], dur:"30 min", custo:"Gratuito", freq:1,
+    resumo:"Consulta e acompanhamento de candidaturas ao sistema de incentivos COMPETIR+." },
+  { id:"licenciamento-zero", nome:"Licenciamento Zero", tema:"licencas", pub:"emp", fila:"E", modos:["online","presencial"], dur:"30 min", custo:"Ver tabela em vigor", destaque:1, freq:1,
+    resumo:"Declaração prévia eletrónica para iniciar ou modificar atividades económicas mais rapidamente." },
+  { id:"construir-2030", nome:"Construir 2030", tema:"candidaturas", pub:"emp", fila:"E", modos:["online","agendar"], dur:"60 min", custo:"Gratuito", destaque:1,
+    resumo:"Sistema de incentivos para a dinamização do investimento sustentável e integrado na Região." },
+  { id:"cd-bettencourt", nome:"CD «O Silêncio das Horas» — Luís Alberto Bettencourt", tema:"produtos", pub:"cid", fila:"C", modos:["presencial"], dur:"2 min", custo:"Ver preço na loja",
+    resumo:"Edição musical disponível para aquisição nas lojas RIAC." },
+  { id:"cd-stream", nome:"CD «Follow the Stream» — Stream", tema:"produtos", pub:"cid", fila:"C", modos:["presencial"], dur:"2 min", custo:"Ver preço na loja",
+    resumo:"Edição musical disponível para aquisição nas lojas RIAC." },
+];
+
+const FILAS = { A:"Documentos de identificação", B:"Registos e certidões", C:"Pagamentos e licenças", D:"Apoios e Segurança Social", E:"Empresas (RIAE)" };
+
+const EVENTOS = [
+  { t:"Vou ter um bebé", d:"Registo, Cartão de Cidadão e abono", s:["certidao-nascimento","cartao-cidadao","abono"], ic:"baby" },
+  { t:"Vou mudar de casa", d:"Apoios à habitação e alteração de morada", s:["habitacao-propria","renovar-arrendar","cartao-cidadao"], ic:"home" },
+  { t:"Vou viajar", d:"Passaporte e documentos de viagem", s:["passaporte","cartao-cidadao"], ic:"plane" },
+  { t:"Vou reformar-me", d:"Pensão e complementos", s:["pensao-velhice","compamid"], ic:"sun" },
+  { t:"Vou criar uma empresa", d:"Licenciamento e incentivos", s:["licenciamento-zero","construir-2030","emprego-mais"], ic:"brief" },
+  { t:"Vou contratar", d:"Apoios ao emprego", s:["contratar-estavel","emprego-mais"], ic:"users" },
+];
+
+const NOTICIAS = [
+  { d:"05.11.2026", t:"Mais de duas décadas ao serviço dos Açorianos", r:"Das lojas ao Centro de Contactos e à RIAC Móvel: como a rede foi crescendo para estar mais perto de cada cidadão." },
+  { d:"05.11.2026", t:"Carta de Navegador de Recreio: saiba quando e como renovar", r:"O que precisa, quanto tempo demora e onde pode tratar da renovação." },
+  { d:"10.09.2026", t:"OP Açores: cidadãos nas decisões de investimento público", r:"Apresente ideias e vote nas propostas de investimento público para a Região." },
+];
+
+const FERIADOS = ["2026-12-01","2026-12-08","2026-12-25","2027-01-01","2027-03-26","2027-03-28","2027-04-25","2027-05-01","2027-05-17","2027-05-27","2027-06-10"];
+
+/* ===================== UTILITÁRIOS ===================== */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const app = () => $("#app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const pad = (n, l = 2) => String(n).padStart(l, "0");
+const hs = str => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const rnd = seed => (hs(seed) % 10000) / 10000;
+const svcById = id => SERVICOS.find(s => s.id === id);
+const lojaById = id => LOJAS.find(l => l.id === id);
+const temaById = id => TEMAS.find(t => t.id === id);
+const DIAS = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+const MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+
+// Hora oficial dos Açores, independentemente do fuso do visitante
+function azNow() {
+  try {
+    const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Atlantic/Azores", year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false })
+      .formatToParts(new Date()).map(x => [x.type, x.value]));
+    return new Date(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second);
+  } catch { return new Date(); }
+}
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fmtMin = m => `${pad(Math.floor(m/60))}h${pad(m%60)}`;
+const fmtDate = d => `${DIAS[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]}`;
+const parseYmd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+
+/* ===================== ESTADO ===================== */
+const KEY = "riac-prototipo-v1";
+let S = { bookings: [], tickets: [], requests: [], user: null, pub: "cid", fs: 16, hc: false, checks: {}, alerts: {} };
+try { const raw = localStorage.getItem(KEY); if (raw) S = { ...S, ...JSON.parse(raw) }; } catch {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
+
+/* ===================== ÍCONES ===================== */
+const P = {
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  ticket:'<path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v2M14 11v2M14 16v2"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
+  pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  laptop:'<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/>',
+  card:'<rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/>',
+  id:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.6 1.7-2.2 3-2.2s2.4.6 3 2.2M14 10h4M14 13h3"/>',
+  plane:'<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>',
+  phone:'<rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/>',
+  doc:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  scale:'<path d="M12 3v18M7 21h10M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/>',
+  euro:'<path d="M17 6.5A7 7 0 1 0 17 17.5M4 10h9M4 14h9"/>',
+  shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>',
+  heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  form:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  badge:'<circle cx="12" cy="9" r="6"/><path d="m8.5 13.5-1.5 7.5 5-3 5 3-1.5-7.5"/>',
+  bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  baby:'<circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/><path d="M10.5 7.5h.01M13.5 7.5h.01"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/>',
+  home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  brief:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+  chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check:'<path d="m5 12 5 5L20 7"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  left:'<path d="m15 6-6 6 6 6"/>',
+  right:'<path d="m9 6 6 6-6 6"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/>',
+  download:'<path d="M12 4v12M6 10l6 6 6-6M4 20h16"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
+  building:'<path d="M4 21V5l8-3 8 3v16M4 21h16M9 9h1M14 9h1M9 13h1M14 13h1M10 21v-4h4v4"/>',
+  map:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  star:'<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
+  nav:'<path d="M3 11 21 3l-8 18-2-8z"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  wave:'<path d="M3 16c3-3 6-3 9 0s6 3 9 0"/><path d="M6 11l3.5-5 3 4 2-2.5L18 11"/>',
+  upload:'<path d="M12 16V4M6 10l6-6 6 6M4 20h16"/>',
+};
+const I = (n, cls = "") => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${P[n] || P.info}</svg>`;
+
+/* ===================== LOJAS: HORÁRIOS E FILAS ===================== */
+const isHoliday = d => FERIADOS.includes(ymd(d));
+const rangesFor = (loja, d) => isHoliday(d) ? null : loja.h.d[d.getDay()];
+
+function openStatus(loja, now = azNow()) {
+  const m = now.getHours() * 60 + now.getMinutes();
+  const r = rangesFor(loja, now);
+  if (r) {
+    for (const [a, b] of r) if (m >= a && m < b) return { open: true, label: `Aberta · fecha às ${fmtMin(b)}`, closeIn: b - m };
+    const next = r.find(([a]) => a > m);
+    if (next) return { open: false, label: `Pausa · reabre às ${fmtMin(next[0])}` };
+  }
+  for (let i = 1; i <= 8; i++) {
+    const d = new Date(now); d.setDate(d.getDate() + i);
+    const rr = rangesFor(loja, d);
+    if (rr) return { open: false, label: `Fechada · abre ${i === 1 ? "amanhã" : DIAS[d.getDay()].toLowerCase()} às ${fmtMin(rr[0][0])}` };
+  }
+  return { open: false, label: "Fechada" };
+}
+const BIG = ["pdl","parque","angra","praia","horta","rgrande","pdl-riae","madalena","velas"];
+const PER = { A: 7, B: 5, C: 3, D: 12, E: 15 };
+function waitFor(loja, fila) {
+  const st = openStatus(loja);
+  const block = Math.floor(Date.now() / 300000);
+  const n = 10 + Math.floor(rnd(loja.id + fila + "n") * 40) + (block % 30);
+  const served = fila + pad(n, 3);
+  if (!st.open) return { closed: true, served, ahead: 0, mins: 0, st };
+  const base = rnd(loja.id + fila + block);
+  const ahead = Math.round(base * (BIG.includes(loja.id) ? 12 : 5));
+  return { closed: false, served, ahead, mins: ahead * PER[fila], st, next: n + ahead + 1 };
+}
+const avgWait = loja => { const w = ["A","B","C"].map(f => waitFor(loja, f)); return w[0].closed ? null : Math.round(w.reduce((s, x) => s + x.mins, 0) / 3); };
+const filasFor = loja => loja.riae ? ["A","B","C","D","E"] : ["A","B","C","D"];
+const waitTag = mins => mins == null ? `<span class="tag off"><span class="dot"></span>Fechada</span>` : mins <= 10 ? `<span class="tag on"><span class="dot"></span>${mins ? "~" + mins + " min" : "Sem espera"}</span>` : mins <= 30 ? `<span class="tag warn"><span class="dot"></span>~${mins} min</span>` : `<span class="tag off"><span class="dot"></span>~${mins} min</span>`;
+
+/* ===================== AGENDA: DISPONIBILIDADE ===================== */
+function slotsFor(loja, date) {
+  const r = rangesFor(loja, date); if (!r) return [];
+  const now = azNow(); const today = ymd(now) === ymd(date); const nowM = now.getHours() * 60 + now.getMinutes();
+  const dayLoad = 0.15 + rnd(loja.id + ymd(date)) * 0.8;
+  const out = [];
+  for (const [a, b] of r) for (let t = a; t + 20 <= b; t += 20) {
+    const taken = rnd(loja.id + ymd(date) + t) < dayLoad || (today && t < nowM + 30);
+    const own = S.bookings.some(x => x.status !== "cancelada" && x.loja === loja.id && x.date === ymd(date) && x.time === t);
+    out.push({ t, free: !taken && !own });
+  }
+  return out;
+}
+function dayAvail(loja, date) {
+  const now = azNow(); const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const max = new Date(start); max.setDate(max.getDate() + 60);
+  if (date < start || date > max) return "out";
+  const s = slotsFor(loja, date); if (!s.length) return "closed";
+  const f = s.filter(x => x.free).length / s.length;
+  return f === 0 ? "full" : f < 0.25 ? "few" : "many";
+}
+
+/* ===================== UI GERAL ===================== */
+function toast(msg) {
+  const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status"); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3200);
+}
+function confirmBox(title, text, okLabel = "Confirmar", danger = false) {
+  return new Promise(res => {
+    const bg = document.createElement("div"); bg.className = "modal-bg";
+    bg.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><h3 id="mt">${esc(title)}</h3><p class="muted">${esc(text)}</p><div class="row" style="justify-content:flex-end"><button class="btn sec" data-r="0">Voltar</button><button class="btn ${danger ? "danger" : "pri"}" data-r="1">${esc(okLabel)}</button></div></div>`;
+    document.body.appendChild(bg); $("[data-r='1']", bg).focus();
+    const close = v => { bg.remove(); res(v); };
+    bg.addEventListener("click", e => { if (e.target === bg) close(false); const r = e.target.closest("[data-r]"); if (r) close(r.dataset.r === "1"); });
+    bg.addEventListener("keydown", e => { if (e.key === "Escape") close(false); });
+  });
+}
+const code = (pre, n = 6) => pre + Array.from({ length: n }, () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random() * 32)]).join("");
+function qr(seed, size = 112) {
+  const n = 21, c = size / n; let r = "";
+  const fin = (x, y) => `<rect x="${x*c}" y="${y*c}" width="${7*c}" height="${7*c}" fill="#122033"/><rect x="${(x+1)*c}" y="${(y+1)*c}" width="${5*c}" height="${5*c}" fill="#fff"/><rect x="${(x+2)*c}" y="${(y+2)*c}" width="${3*c}" height="${3*c}" fill="#122033"/>`;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    if ((x < 8 && y < 8) || (x > 12 && y < 8) || (x < 8 && y > 12)) continue;
+    if (rnd(seed + x + "," + y) > .52) r += `<rect x="${x*c}" y="${y*c}" width="${c}" height="${c}"/>`;
+  }
+  return `<svg class="qr" viewBox="0 0 ${size} ${size}" role="img" aria-label="Código QR da senha"><rect width="${size}" height="${size}" fill="#fff"/><g fill="#122033">${r}</g>${fin(0,0)}${fin(14,0)}${fin(0,14)}</svg>`;
+}
+function ics(b) {
+  const d = b.date.replace(/-/g, ""), s = `T${pad(Math.floor(b.time/60))}${pad(b.time%60)}00`, e = `T${pad(Math.floor((b.time+20)/60))}${pad((b.time+20)%60)}00`;
+  const l = lojaById(b.loja), sv = svcById(b.servico);
+  const txt = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//RIAC Prototipo//PT","BEGIN:VEVENT",`UID:${b.id}@riac-prototipo`,`DTSTART;TZID=Atlantic/Azores:${d}${s}`,`DTEND;TZID=Atlantic/Azores:${d}${e}`,`SUMMARY:RIAC – ${sv.nome}`,`LOCATION:${l.nome}\\, ${l.morada}\\, ${l.cp} ${l.local}`,`DESCRIPTION:Marcação ${b.id}. Leve os documentos necessários.`,"BEGIN:VALARM","TRIGGER:-PT2H","ACTION:DISPLAY","DESCRIPTION:Marcação RIAC","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([txt], { type: "text/calendar" })); a.download = `marcacao-${b.id}.ics`; a.click();
+}
+const mapsUrl = l => `https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}`;
+
+/* ===================== LAYOUT ===================== */
+const NAV = [["#/servicos","Serviços"],["#/lojas","Lojas"],["#/senha","Senha digital"],["#/agendar","Agendamentos"],["#/contactos","Contactos"]];
+function chrome() {
+  document.body.insertAdjacentHTML("afterbegin", `
+  <a class="skip" href="#app" onclick="event.preventDefault();document.getElementById('app').focus()">Saltar para o conteúdo</a>
+  <div class="proto"><b>Protótipo conceptual</b> de redesign do portal RIAC · não é o site oficial · nenhum dado sai do seu dispositivo</div>
+  <header class="top"><div class="wrap">
+    <a class="brand" href="#/" aria-label="RIAC — Início"><span class="mark">${I("wave")}</span><span><span class="t1">RIAC</span><br><span class="t2">Rede Integrada de Apoio ao Cidadão</span></span></a>
+    <nav class="nav" aria-label="Principal">${NAV.map(([h,t]) => `<a href="${h}">${t}</a>`).join("")}</nav>
+    <div class="right">
+      <div class="a11y" role="group" aria-label="Acessibilidade">
+        <button data-fs="-1" aria-label="Diminuir letra">A−</button><button data-fs="1" aria-label="Aumentar letra">A+</button><button data-hc aria-label="Alto contraste">Contraste</button>
+      </div>
+      <a class="btn sec sm" href="#/conta" id="acct">${I("user","sm")}<span>${S.user ? esc(S.user.nome.split(" ")[0]) : "Área pessoal"}</span></a>
+    </div>
+  </div></header>
+  <main id="app" tabindex="-1"></main>
+  <footer><div class="wrap">
+    <div class="cols">
+      <div><div class="brand" style="color:#fff"><span class="mark">${I("wave")}</span><span class="t1">RIAC</span></div>
+        <p style="margin-top:14px">Mais de duas décadas a aproximar os serviços públicos de quem vive nas nove ilhas: lojas, Centro de Contactos, RIAC Móvel e canais digitais.</p>
+        <p class="xs">Linha Verde <a href="tel:+351800500501"><b>800 500 501</b></a> · chamada gratuita</p></div>
+      <div><h4>Serviços</h4><ul><li><a href="#/servicos">Todos os serviços</a></li><li><a href="#/senha">Senha digital</a></li><li><a href="#/agendar">Agendar atendimento</a></li><li><a href="#/pagamentos">Pagamentos</a></li></ul></div>
+      <div><h4>Atendimento</h4><ul><li><a href="#/lojas">55 lojas em 9 ilhas</a></li><li><a href="#/contactos">Contactos e Linha Verde</a></li><li><a href="#/conta">Área pessoal</a></li><li><a href="#/contactos#opiniao">Dê a sua opinião</a></li></ul></div>
+      <div><h4>Siga-nos</h4><ul><li><a href="https://www.facebook.com/riacazores" target="_blank" rel="noopener">Facebook</a></li><li><a href="http://www.instagram.com/riacazores" target="_blank" rel="noopener">Instagram</a></li></ul>
+        <h4 style="margin-top:18px">Compromissos</h4><ul><li>Acessibilidade WCAG 2.2 AA</li><li>Privacidade e RGPD</li></ul></div>
+    </div>
+    <p class="xs" style="margin-top:36px;border-top:1px solid rgba(255,255,255,.1);padding-top:18px">Protótipo de demonstração. Conteúdos de serviços e lojas baseados no portal riac.azores.gov.pt (novembro de 2026); tempos de espera, vagas e estados de pedidos são simulados. Coordenadas das lojas aproximadas.</p>
+  </div></footer>
+  <nav class="bnav" aria-label="Atalhos">
+    <a href="#/">${I("home")}Início</a><a href="#/servicos">${I("grid")}Serviços</a><a href="#/senha">${I("ticket")}Senha</a><a href="#/agendar">${I("calendar")}Agendar</a><a href="#/conta">${I("user")}Conta</a>
+  </nav>
+  <button class="fab" id="fab" aria-expanded="false" aria-controls="chat">${I("chat")}<span>Precisa de ajuda?</span></button>`);
+  document.addEventListener("click", e => {
+    const f = e.target.closest("[data-fs]"); if (f) { S.fs = Math.min(20, Math.max(14, S.fs + Number(f.dataset.fs))); applyPrefs(); save(); }
+    if (e.target.closest("[data-hc]")) { S.hc = !S.hc; applyPrefs(); save(); }
+  });
+  $("#fab").addEventListener("click", toggleChat);
+  applyPrefs();
+}
+function applyPrefs() { document.documentElement.style.setProperty("--fs", S.fs + "px"); document.documentElement.classList.toggle("hc", S.hc); }
+function setNav(hash) {
+  $$(".nav a, .bnav a").forEach(a => {
+    const h = a.getAttribute("href");
+    const on = h === "#/" ? hash === "#/" || hash === "" : hash.startsWith(h) || (h === "#/servicos" && hash.startsWith("#/servico"));
+    on ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current");
+  });
+  $("#acct span").textContent = S.user ? S.user.nome.split(" ")[0] : "Área pessoal";
+}
+
+/* ===================== ROUTER ===================== */
+let timers = [];
+const clearTimers = () => { timers.forEach(clearInterval); timers = []; };
+function route() {
+  clearTimers();
+  const h = location.hash || "#/";
+  const [path, qs] = h.slice(1).split("?");
+  const q = Object.fromEntries(new URLSearchParams(qs || ""));
+  const parts = path.split("/").filter(Boolean);
+  setNav(h);
+  const v = parts[0] || "";
+  const map = { "": viewHome, servicos: viewCatalog, servico: viewService, senha: viewSenha, agendar: viewAgendar, lojas: viewLojas, loja: viewLoja, pedido: viewPedido, pagamentos: viewPagamentos, conta: viewConta, contactos: viewContactos };
+  (map[v] || viewHome)(parts, q);
+  if (!h.includes("#opiniao")) window.scrollTo(0, 0);
+  app().focus({ preventScroll: true });
+  const t = $("h1", app()); document.title = (t ? t.textContent + " · " : "") + "RIAC — protótipo";
+}
+window.addEventListener("hashchange", route);
+const go = h => { location.hash = h; };
+
+/* ===================== COMPONENTES ===================== */
+const modeTags = s => `<div class="tags">${s.modos.includes("online") ? `<span class="tag blue">${I("laptop","sm")}Online</span>` : ""}${s.modos.includes("agendar") ? `<span class="tag vio">${I("calendar","sm")}Com marcação</span>` : ""}${s.modos.includes("presencial") ? `<span class="tag">${I("ticket","sm")}Senha na loja</span>` : ""}</div>`;
+const svcCard = s => `<a class="card link svc" href="#/servico/${s.id}"><span class="xs muted">${esc(temaById(s.tema).nome)}${s.pub === "emp" ? " · Empresas" : ""}</span><h3 style="margin:0">${esc(s.nome)}</h3><p class="small muted" style="margin:0">${esc(s.resumo.length > 120 ? s.resumo.slice(0, 117) + "…" : s.resumo)}</p>${modeTags(s)}<div class="foot"><span class="small muted">${I("clock","sm")} ${s.dur}</span><span class="small" style="color:var(--primary);font-weight:600">Ver serviço →</span></div></a>`;
+function searchSvc(q, pub) {
+  const n = norm(q).trim(); if (!n) return [];
+  return SERVICOS.filter(s => !pub || s.pub === pub || n.length > 2)
+    .map(s => { const t = norm(s.nome + " " + temaById(s.tema).nome + " " + s.resumo); const sc = norm(s.nome).includes(n) ? 3 : t.includes(n) ? 1 : n.split(" ").every(w => t.includes(w)) ? 1 : 0; return [s, sc]; })
+    .filter(x => x[1]).sort((a, b) => b[1] - a[1]).map(x => x[0]);
+}
+function bindSearch(input, box, pub) {
+  let idx = -1, res = [];
+  const draw = () => {
+    res = searchSvc(input.value, pub()).slice(0, 6);
+    if (!input.value.trim()) { box.hidden = true; return; }
+    box.hidden = false;
+    box.innerHTML = res.length ? res.map((s, i) => `<a href="#/servico/${s.id}" class="${i === idx ? "on" : ""}" role="option">${I(temaById(s.tema).ic)}<span><b>${esc(s.nome)}</b><br><span class="xs muted">${esc(temaById(s.tema).nome)}</span></span>${s.modos.includes("online") ? `<span class="tag blue tag">Online</span>` : ""}</a>`).join("")
+      : `<div style="padding:16px" class="small muted">Sem resultados para «${esc(input.value)}». Experimente outra palavra ou <a href="#/contactos">fale connosco</a>.</div>`;
+  };
+  input.addEventListener("input", () => { idx = -1; draw(); });
+  input.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown") { idx = Math.min(res.length - 1, idx + 1); draw(); e.preventDefault(); }
+    if (e.key === "ArrowUp") { idx = Math.max(-1, idx - 1); draw(); e.preventDefault(); }
+    if (e.key === "Enter") { e.preventDefault(); if (idx >= 0 && res[idx]) go("#/servico/" + res[idx].id); else go("#/servicos?q=" + encodeURIComponent(input.value)); }
+    if (e.key === "Escape") box.hidden = true;
+  });
+  document.addEventListener("click", e => { if (!box.contains(e.target) && e.target !== input) box.hidden = true; });
+}
+function islandSelect(id, val, all = true) {
+  return `<select class="inp" id="${id}" aria-label="Ilha">${all ? `<option value="">Todas as ilhas</option>` : ""}${ILHAS.map(i => `<option ${i === val ? "selected" : ""}>${i}</option>`).join("")}</select>`;
+}
+function sortByDistance(list, pos) {
+  const d = l => Math.hypot(l.lat - pos.lat, (l.lng - pos.lng) * Math.cos(pos.lat * Math.PI / 180));
+  return [...list].map(l => ({ ...l, km: Math.round(d(l) * 111) })).sort((a, b) => a.km - b.km);
+}
+let MYPOS = null;
+function locate(cb) {
+  if (!navigator.geolocation) { toast("O seu navegador não permite obter a localização."); return; }
+  toast("A obter a sua localização…");
+  navigator.geolocation.getCurrentPosition(p => { MYPOS = { lat: p.coords.latitude, lng: p.coords.longitude }; cb(MYPOS); },
+    () => toast("Não foi possível obter a localização. Escolha a ilha na lista."), { timeout: 8000 });
+}
+
+/* ===================== INÍCIO ===================== */
+function viewHome() {
+  const pub = S.pub;
+  const freq = SERVICOS.filter(s => s.freq && s.pub === pub).slice(0, 6);
+  const dest = SERVICOS.filter(s => s.destaque && s.pub === pub).slice(0, 3);
+  const next = S.bookings.filter(b => b.status === "confirmada" && b.date >= ymd(azNow())).sort((a, b) => (a.date + pad(a.time, 4)).localeCompare(b.date + pad(b.time, 4)))[0];
+  const activeT = S.tickets.find(t => t.status === "ativa");
+  app().innerHTML = `
+  <section class="hero"><div class="wrap">
+    <svg class="waves" viewBox="0 0 600 300" fill="none" stroke="#0b5574" stroke-width="1.2" aria-hidden="true">
+      ${Array.from({ length: 9 }, (_, i) => `<path d="M0 ${80 + i*24} C 120 ${50 + i*24}, 220 ${120 + i*24}, 340 ${80 + i*24} S 520 ${40 + i*24}, 600 ${90 + i*24}" opacity="${0.25 + i*0.07}"/>`).join("")}
+    </svg>
+    <p class="eyebrow">Rede Integrada de Apoio ao Cidadão · Açores</p>
+    <h1>Os serviços públicos,<br>mais perto de si.</h1>
+    <p class="lead">Trate do que precisa online, tire senha antes de sair de casa ou marque o seu atendimento numa das 55 lojas das nove ilhas.</p>
+    <div class="seg" role="group" aria-label="Perfil">
+      <button aria-pressed="${pub === "cid"}" data-pub="cid">Cidadãos</button><button aria-pressed="${pub === "emp"}" data-pub="emp">Empresas</button>
+    </div>
+    <div class="search" role="search">
+      ${I("search","lead")}
+      <label class="sr" for="q">Pesquisar serviços</label>
+      <input id="q" type="search" autocomplete="off" placeholder="${pub === "cid" ? "Ex.: renovar Cartão de Cidadão, passaporte, COMPAMID…" : "Ex.: Licenciamento Zero, Emprego +, certidão comercial…"}" aria-controls="sug">
+      <button class="btn pri" id="qgo">Pesquisar</button>
+      <div class="suggest" id="sug" hidden role="listbox"></div>
+    </div>
+    <div class="chips">${(pub === "cid" ? ["cartao-cidadao","passaporte","chave-movel","pagamento-eda","registo-criminal"] : ["licenciamento-zero","emprego-mais","registo-criminal-pc","certidao-comercial","construir-2030"]).map(id => `<a class="chip" href="#/servico/${id}">${esc(svcById(id).nome.replace(/ \(.*\)/, ""))}</a>`).join("")}</div>
+  </div></section>
+
+  <div class="wrap">
+    <div class="quick">
+      <a class="qa" href="#/senha"><span class="ico">${I("ticket")}</span><b>Tirar senha digital</b><span>Veja a fila em tempo real e chegue na hora certa</span></a>
+      <a class="qa" href="#/agendar"><span class="ico">${I("calendar")}</span><b>Agendar atendimento</b><span>Escolha a loja, o dia e a hora</span></a>
+      <a class="qa" href="#/lojas"><span class="ico">${I("pin")}</span><b>Encontrar loja</b><span>Horários, mapa e espera atual</span></a>
+      <a class="qa" href="#/servicos?modo=online"><span class="ico">${I("laptop")}</span><b>Tratar online</b><span>Sem filas, a qualquer hora</span></a>
+    </div>
+  </div>
+
+  ${(next || activeT) ? `<div class="wrap" style="margin-top:22px">${activeT ? `<a class="alert ok" href="#/senha/ativa/${activeT.id}" style="text-decoration:none">${I("ticket")}<div><b>Tem uma senha ativa: ${activeT.num}</b><br><span class="small">${esc(lojaById(activeT.loja).nome)} · toque para acompanhar a fila</span></div></a>` : ""}
+    ${next ? `<a class="alert info" href="#/conta" style="text-decoration:none;margin-top:10px">${I("calendar")}<div><b>Próxima marcação: ${fmtDate(parseYmd(next.date))}, ${fmtMin(next.time)}</b><br><span class="small">${esc(svcById(next.servico).nome)} · ${esc(lojaById(next.loja).nome)}</span></div></a>` : ""}</div>` : ""}
+
+  ${pub === "cid" ? `<section class="blk"><div class="wrap">
+    <div class="head"><div><p class="eyebrow">Momentos de vida</p><h2>O que está a acontecer na sua vida?</h2><p class="muted">Reunimos tudo o que precisa de tratar, num só sítio.</p></div></div>
+    <div class="grid g3">${EVENTOS.slice(0, 6).map((e, i) => `<a class="event" href="#/servicos?evento=${i}"><span class="ico">${I(e.ic)}</span><span><b>${e.t}</b><br><span class="small muted">${e.d}</span></span></a>`).join("")}</div>
+  </div></section>` : `<section class="blk"><div class="wrap">
+    <div class="head"><div><p class="eyebrow">RIAE · Rede Integrada de Apoio à Empresa</p><h2>Apoio dedicado a empresas</h2><p class="muted">Incentivos, licenciamento e certidões — com atendimento especializado nas lojas RIAC-RIAE.</p></div><a class="btn sec" href="#/lojas?riae=1">Ver lojas RIAE</a></div>
+    <div class="grid g3">${EVENTOS.slice(4).concat([{ t:"Candidatar-me a incentivos", d:"Construir 2030, PIR, PARH", s:[], ic:"euro" }]).map((e, i) => `<a class="event" href="#/servicos?pub=emp&tema=candidaturas"><span class="ico">${I(e.ic)}</span><span><b>${e.t}</b><br><span class="small muted">${e.d}</span></span></a>`).join("")}</div>
+  </div></section>`}
+
+  <section class="blk" style="padding-top:0"><div class="wrap live">
+    <div class="card">
+      <div class="row sb"><div><h3 style="margin:0">Tempos de espera agora</h3><p class="xs muted" style="margin:0"><span class="pulse" style="display:inline-block;margin-right:6px"></span>Atualizado a cada minuto · hora dos Açores <b id="clk"></b></p></div>
+      <div style="width:190px">${islandSelect("wIsl", "São Miguel", false)}</div></div>
+      <div id="wlist" style="margin-top:12px"></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px;background:var(--primary);color:#fff;border:0">
+      <p class="eyebrow" style="color:#bfe0ec">Novo</p>
+      <h2 style="color:#fff;margin:0">Tire a senha em casa.<br>Chegue quando for a sua vez.</h2>
+      <p style="margin:0;color:#d5e8f0">Acompanhe a fila no telemóvel e receba um aviso quando faltarem poucas pessoas. Sem papel, sem esperas na loja.</p>
+      <div class="row" style="margin-top:auto"><a class="btn" style="background:#fff;color:var(--primary)" href="#/senha">${I("ticket")}Tirar senha</a><a class="btn" style="color:#fff;border-color:rgba(255,255,255,.4)" href="#/agendar">Prefiro marcar</a></div>
+    </div>
+  </div></section>
+
+  <section class="blk" style="padding-top:0"><div class="wrap">
+    <div class="head"><div><p class="eyebrow">Mais procurados</p><h2>Serviços frequentes</h2></div><a class="btn ghost" href="#/servicos?pub=${pub}">Ver todos ${I("arrow","sm")}</a></div>
+    <div class="grid g3">${freq.map(svcCard).join("")}</div>
+  </div></section>
+
+  <section class="blk" style="background:var(--surface);border-block:1px solid var(--line)"><div class="wrap">
+    <div class="head"><div><p class="eyebrow">Em destaque</p><h2>${pub === "cid" ? "Apoios abertos" : "Incentivos em vigor"}</h2></div></div>
+    <div class="grid g3">${dest.map(svcCard).join("")}</div>
+  </div></section>
+
+  <section class="blk"><div class="wrap">
+    <div class="head"><div><p class="eyebrow">Explorar</p><h2>Serviços por tema</h2></div></div>
+    <div class="grid g4">${TEMAS.map(t => `<a class="card link theme" href="#/servicos?tema=${t.id}"><span class="ico">${I(t.ic)}</span><span><b>${t.nome}</b><br><span class="small muted">${t.sub}</span></span></a>`).join("")}</div>
+  </div></section>
+
+  <section class="blk" style="padding-top:0"><div class="wrap">
+    <div class="head"><div><p class="eyebrow">Comunicação</p><h2>Novidades</h2></div></div>
+    <div class="grid g3">${NOTICIAS.map(n => `<article class="card"><p class="xs muted">${n.d}</p><h3>${n.t}</h3><p class="small muted" style="margin:0">${n.r}</p></article>`).join("")}</div>
+  </div></section>
+
+  <section class="blk" style="padding-top:0"><div class="wrap">${channelsBlock()}</div></section>`;
+
+  $$("[data-pub]").forEach(b => b.onclick = () => { S.pub = b.dataset.pub; save(); viewHome(); });
+  bindSearch($("#q"), $("#sug"), () => S.pub);
+  $("#qgo").onclick = () => go("#/servicos?q=" + encodeURIComponent($("#q").value));
+  const drawWait = () => {
+    $("#clk").textContent = fmtMin(azNow().getHours() * 60 + azNow().getMinutes());
+    const isl = $("#wIsl").value;
+    const ls = LOJAS.filter(l => l.ilha === isl).map(l => ({ l, w: avgWait(l) })).sort((a, b) => (a.w ?? 999) - (b.w ?? 999)).slice(0, 5);
+    $("#wlist").innerHTML = ls.map(({ l, w }) => `<a class="waitrow" href="#/loja/${l.id}" style="text-decoration:none;color:inherit"><span style="flex:0 0 46%"><b class="small">${esc(l.nome)}</b><br><span class="xs muted">${esc(openStatus(l).label)}</span></span><span class="bar"><i style="width:${w == null ? 0 : Math.min(100, 8 + w * 2)}%;background:${w == null ? "var(--line)" : w <= 10 ? "var(--green)" : w <= 30 ? "var(--amber)" : "var(--red)"}"></i></span>${waitTag(w)}</a>`).join("");
+  };
+  $("#wIsl").onchange = drawWait; drawWait(); timers.push(setInterval(drawWait, 60000));
+}
+function channelsBlock() {
+  const lv = lineStatus();
+  return `<div class="channels">
+    <div><p class="eyebrow" style="color:#9fc3d4">Canais de atendimento</p><h2>Estamos aqui para ajudar.</h2><p style="color:#b8c7d6">Escolha o canal que lhe for mais conveniente — todos dão acesso aos mesmos serviços.</p></div>
+    <div class="ch"><b>Linha Verde</b><a class="big" href="tel:+351800500501">800 500 501</a><span class="small">${lv.open ? `<span class="tag on"><span class="dot"></span>Disponível agora</span>` : `<span class="tag off"><span class="dot"></span>Fechada</span>`}</span><p class="xs" style="margin-top:8px;color:#b8c7d6">Seg–sáb 09h00–22h00 · Dom 10h00–22h00 · Feriados 10h00–18h00</p></div>
+    <div class="ch"><b>Assistente e e-mail</b><p class="small" style="color:#b8c7d6;margin:6px 0 10px">Respostas imediatas a qualquer hora, ou escreva-nos.</p><button class="btn sm" style="background:#fff;color:var(--ink)" onclick="toggleChat(true)">${I("chat","sm")}Abrir assistente</button> <a class="btn sm" style="color:#fff" href="#/contactos">${I("mail","sm")}E-mail</a></div>
+    <div class="ch"><b>Lojas e RIAC Móvel</b><p class="small" style="color:#b8c7d6;margin:6px 0 10px">55 lojas em todas as ilhas e unidades móveis que vão até às freguesias.</p><a class="btn sm" style="background:#fff;color:var(--ink)" href="#/lojas">${I("pin","sm")}Ver lojas</a></div>
+  </div>`;
+}
+function lineStatus() {
+  const n = azNow(), m = n.getHours() * 60 + n.getMinutes(), d = n.getDay();
+  const [a, b] = isHoliday(n) ? [600, 1080] : d === 0 ? [600, 1320] : [540, 1320];
+  return { open: m >= a && m < b };
+}
+
+/* ===================== CATÁLOGO ===================== */
+function viewCatalog(_, q) {
+  const st = { q: q.q || "", tema: q.tema || "", pub: q.pub || (q.q ? "" : S.pub), modo: q.modo || "", ev: q.evento };
+  const ev = st.ev != null ? EVENTOS[+st.ev] : null;
+  app().innerHTML = `<div class="wrap">
+    <div class="crumbs"><a href="#/">Início</a> / Serviços</div>
+    <div class="pagehead"><h1>${ev ? esc(ev.t) : "Todos os serviços"}</h1><p class="muted" style="margin:0">${ev ? esc(ev.d) + " — os serviços que precisa, por ordem." : "Encontre o serviço, veja o que precisa e trate dele da forma que preferir."}</p></div>
+    ${ev ? "" : `<div class="grid" style="grid-template-columns:1fr auto auto;gap:12px;margin-bottom:14px" id="filters">
+      <div class="search" style="max-width:none"><span style="position:absolute;left:16px;top:14px;color:var(--muted)">${I("search")}</span><input id="cq" class="inp" style="padding-left:48px" type="search" placeholder="Pesquisar serviços" value="${esc(st.q)}" aria-label="Pesquisar serviços"></div>
+      <select class="inp" id="cpub" aria-label="Público"><option value="">Cidadãos e empresas</option><option value="cid" ${st.pub === "cid" ? "selected" : ""}>Cidadãos</option><option value="emp" ${st.pub === "emp" ? "selected" : ""}>Empresas</option></select>
+      <select class="inp" id="cmodo" aria-label="Forma de atendimento"><option value="">Qualquer forma</option><option value="online" ${st.modo === "online" ? "selected" : ""}>Online</option><option value="agendar" ${st.modo === "agendar" ? "selected" : ""}>Com marcação</option><option value="presencial" ${st.modo === "presencial" ? "selected" : ""}>Senha na loja</option></select>
+    </div>
+    <div class="chips" style="margin-bottom:22px" id="ctema"><button class="chip" aria-pressed="${!st.tema}" data-t="">Todos os temas</button>${TEMAS.map(t => `<button class="chip" aria-pressed="${st.tema === t.id}" data-t="${t.id}">${t.nome}</button>`).join("")}</div>`}
+    <p class="small muted" id="ccount" aria-live="polite"></p>
+    <div class="grid g3" id="cres" style="margin-bottom:40px"></div></div>`;
+  const draw = () => {
+    let list = ev ? ev.s.map(svcById) : st.q ? searchSvc(st.q) : SERVICOS;
+    if (!ev) list = list.filter(s => (!st.tema || s.tema === st.tema) && (!st.pub || s.pub === st.pub) && (!st.modo || s.modos.includes(st.modo)));
+    $("#ccount").textContent = `${list.length} ${list.length === 1 ? "serviço" : "serviços"}`;
+    $("#cres").innerHTML = list.length ? list.map(svcCard).join("") : `<div class="empty" style="grid-column:1/-1">Não encontrámos serviços com estes filtros.<br><button class="btn ghost" id="clr">Limpar filtros</button></div>`;
+    const c = $("#clr"); if (c) c.onclick = () => { Object.assign(st, { q: "", tema: "", pub: "", modo: "" }); $("#cq").value = ""; $("#cpub").value = ""; $("#cmodo").value = ""; $$("#ctema .chip").forEach(x => x.setAttribute("aria-pressed", x.dataset.t === "")); draw(); };
+  };
+  if (!ev) {
+    $("#cq").oninput = e => { st.q = e.target.value; draw(); };
+    $("#cpub").onchange = e => { st.pub = e.target.value; draw(); };
+    $("#cmodo").onchange = e => { st.modo = e.target.value; draw(); };
+    $("#ctema").onclick = e => { const b = e.target.closest("[data-t]"); if (!b) return; st.tema = b.dataset.t; $$("#ctema .chip").forEach(x => x.setAttribute("aria-pressed", x === b)); draw(); };
+  }
+  draw();
+}
+
+/* ===================== FICHA DE SERVIÇO ===================== */
+const DOCS = {
+  "cartao-cidadao": ["Cartão de Cidadão ou Bilhete de Identidade atual (maiores de 12 anos)", "Na falta de documento: passaporte, carta de condução ou título de residência válido", "Menores de 12 anos: presença do menor e de quem exerce as responsabilidades parentais, com identificação", "Comprovativo das responsabilidades parentais ou tutela, emitido há menos de 6 meses (quando aplicável)", "União de facto: declaração conjunta sob compromisso de honra"],
+  "passaporte": ["Cartão de Cidadão válido", "Passaporte anterior (se tiver)", "Menores: autorização de quem exerce as responsabilidades parentais"],
+  "chave-movel": ["Cartão de Cidadão ou passaporte válido", "Telemóvel com número português ou estrangeiro", "Endereço de e-mail (opcional)"],
+  "compamid": ["Cartão de Cidadão", "Comprovativo da pensão (velhice, sobrevivência ou invalidez)", "Comprovativo de residência nos Açores", "Atestado de incapacidade ≥ 80% (se aplicável)"],
+  "pagamento-eda": ["Fatura da EDA ou número de cliente"],
+};
+const docsFor = s => DOCS[s.id] || (s.pub === "emp" ? ["Certidão permanente ou código de acesso da empresa", "Identificação do representante legal", "NIPC da entidade", "Documentos específicos do aviso/regulamento"] : ["Cartão de Cidadão ou outro documento de identificação válido", "Número de Identificação Fiscal (NIF)", "Documentos específicos do pedido (indicados na loja ou no formulário)"]);
+const PASSOS = s => [
+  s.modos.includes("online") ? ["Trate online", "Preencha o pedido aqui no portal, anexe os documentos e acompanhe o estado na sua área pessoal."] : null,
+  s.modos.includes("agendar") ? ["Ou marque o atendimento", "Escolha a loja, o dia e a hora. Recebe confirmação e lembrete."] : null,
+  s.modos.includes("presencial") ? ["Ou tire senha digital", "Antes de sair de casa, veja a fila e tire a senha. Avisamos quando estiver perto da sua vez."] : null,
+  ["Leve os documentos", "Use a lista de verificação para confirmar que não falta nada."],
+].filter(Boolean).map((p, i) => i === 0 ? [p[0].replace(/^Ou /, "").replace(/^\w/, c => c.toUpperCase()), p[1]] : p);
+
+function viewService(parts) {
+  const s = svcById(parts[1]); if (!s) return go("#/servicos");
+  const t = temaById(s.tema);
+  const docs = docsFor(s);
+  const done = S.checks[s.id] || [];
+  app().innerHTML = `<div class="wrap">
+    <div class="crumbs"><a href="#/">Início</a> / <a href="#/servicos">Serviços</a> / <a href="#/servicos?tema=${t.id}">${t.nome}</a></div>
+    <div class="pagehead">${modeTags(s)}<h1 style="margin-top:12px">${esc(s.nome)}</h1><p class="lead muted" style="max-width:760px;margin:0">${esc(s.resumo)}</p></div>
+    <div class="layout">
+      <div>
+        <div class="tabs" role="tablist">${["Como fazer","Documentos","Custos e prazos","Onde fazer"].map((x, i) => `<button role="tab" aria-selected="${i === 0}" data-tab="${i}">${x}</button>`).join("")}</div>
+        <div data-panel="0"><ol class="timeline" style="margin-top:8px">${PASSOS(s).map(([a, b], i) => `<li class="${i === 0 ? "cur" : ""}"><b>${a}</b><p class="small muted" style="margin:2px 0 0">${b}</p></li>`).join("")}</ol>
+          <div class="alert info" style="margin-top:10px">${I("info")}<div class="small"><b>Quando fazer:</b> a qualquer altura. Tempo médio de atendimento: ${s.dur}.</div></div></div>
+        <div data-panel="1" hidden>
+          <h3>Tem tudo o que precisa?</h3><p class="small muted">Marque o que já tem. Guardamos a lista neste dispositivo.</p>
+          <div class="progress"><i id="pg" style="width:${done.length / docs.length * 100}%"></i></div>
+          <div id="chk">${docs.map((d, i) => `<label class="check ${done.includes(i) ? "done" : ""}"><input type="checkbox" data-i="${i}" ${done.includes(i) ? "checked" : ""}><span>${esc(d)}</span></label>`).join("")}</div>
+          ${s.id === "cartao-cidadao" ? `<p class="small"><a href="https://riac.azores.gov.pt/documents/d/guest/declaracao-sob-compromisso-de-honra-uniao-de-facto" target="_blank" rel="noopener">${I("download","sm")} Minuta — declaração de união de facto</a></p>` : ""}
+        </div>
+        <div data-panel="2" hidden>${s.id === "cartao-cidadao" ? ccCalc() : `<dl class="kv card"><dt>Custo</dt><dd>${esc(s.custo)}</dd><dt>Tempo de atendimento</dt><dd>${s.dur}</dd><dt>Pagamento</dt><dd>Numerário, multibanco ou MB WAY na loja; referência multibanco nos pedidos online</dd></dl>`}</div>
+        <div data-panel="3" hidden>
+          <div class="row" style="margin-bottom:14px"><div style="flex:1;min-width:200px">${islandSelect("sIsl", "", true)}</div><button class="btn sec" id="sLoc">${I("nav","sm")}Perto de mim</button></div>
+          <div class="storelist" id="sList"></div>
+        </div>
+      </div>
+      <aside class="sticky">
+        <div class="card">
+          <h3>Como quer tratar?</h3>
+          <div class="grid" style="gap:10px;margin:14px 0 18px">
+            ${s.modos.includes("online") ? `<a class="btn pri block" href="${s.id === "pagamento-eda" ? "#/pagamentos" : "#/pedido/" + s.id}">${I("laptop")}Tratar online agora</a>` : ""}
+            ${s.modos.includes("agendar") ? `<a class="btn ${s.modos.includes("online") ? "sec" : "pri"} block" href="#/agendar?servico=${s.id}">${I("calendar")}Marcar atendimento</a>` : ""}
+            ${s.modos.includes("presencial") ? `<a class="btn sec block" href="#/senha?fila=${s.fila}">${I("ticket")}Tirar senha digital</a>` : ""}
+          </div>
+          <dl class="kv"><dt>Custo</dt><dd>${esc(s.custo)}</dd><dt>Duração</dt><dd>${s.dur}</dd><dt>Atendimento</dt><dd>${FILAS[s.fila]}</dd><dt>Público</dt><dd>${s.pub === "emp" ? "Empresas" : "Cidadãos"}</dd></dl>
+        </div>
+        <div class="card" style="margin-top:14px"><b>Precisa de ajuda?</b><p class="small muted" style="margin:4px 0 10px">Linha Verde gratuita, todos os dias.</p><a class="btn sec sm" href="tel:+351800500501">${I("phone","sm")}800 500 501</a> <button class="btn ghost sm" onclick="toggleChat(true)">Assistente</button></div>
+      </aside>
+    </div></div>`;
+  $$("[data-tab]").forEach(b => b.onclick = () => { $$("[data-tab]").forEach(x => x.setAttribute("aria-selected", x === b)); $$("[data-panel]").forEach(p => p.hidden = p.dataset.panel !== b.dataset.tab); });
+  $("#chk").onchange = e => {
+    const i = +e.target.dataset.i; let a = S.checks[s.id] || [];
+    a = e.target.checked ? [...new Set([...a, i])] : a.filter(x => x !== i); S.checks[s.id] = a; save();
+    e.target.closest(".check").classList.toggle("done", e.target.checked);
+    $("#pg").style.width = a.length / docs.length * 100 + "%";
+    if (a.length === docs.length) toast("Tudo pronto. Já pode tratar do seu pedido.");
+  };
+  const drawStores = (pos) => {
+    const isl = $("#sIsl").value;
+    let ls = LOJAS.filter(l => (!isl || l.ilha === isl) && (s.pub !== "emp" || l.riae));
+    if (pos) ls = sortByDistance(ls, pos).slice(0, 8);
+    $("#sList").innerHTML = ls.map(storeRow).join("");
+  };
+  $("#sIsl").onchange = () => drawStores(); $("#sLoc").onclick = () => locate(drawStores); drawStores();
+  if (s.id === "cartao-cidadao") bindCC();
+}
+const storeRow = l => { const st = openStatus(l); const w = avgWait(l); return `<a class="store" href="#/loja/${l.id}" style="text-decoration:none;color:inherit"><span class="pin">${I(l.riae ? "building" : "pin")}</span><span style="flex:1"><h4>${esc(l.nome)}</h4><span class="small muted">${esc(l.morada)}, ${esc(l.local)}${l.km != null ? ` · ${l.km} km` : ""}</span><br><span class="xs ${st.open ? "" : "muted"}" style="color:${st.open ? "var(--green)" : ""}">${st.label}</span></span>${waitTag(w)}</a>`; };
+
+function ccCalc() {
+  return `<div class="card"><h3>Calcule o custo do seu Cartão de Cidadão</h3>
+    <div class="grid g3" style="margin:14px 0">
+      <div><label class="f" for="cAge">Idade</label><select class="inp" id="cAge"><option value="y">Até 25 anos</option><option value="o">Mais de 25 anos</option></select></div>
+      <div><label class="f" for="cType">Tipo de pedido</label><select class="inp" id="cType"><option value="n">Normal</option><option value="u">Urgente</option><option value="x">Extremamente urgente</option></select></div>
+      <div><label class="f" for="cDel">Entrega</label><select class="inp" id="cDel"><option value="pt">Em Portugal</option><option value="ext">No estrangeiro</option></select></div>
+    </div>
+    <label class="check" style="margin-bottom:14px"><input type="checkbox" id="cFirst"><span>É o primeiro pedido de uma criança com menos de 1 ano</span></label>
+    <div class="row sb" style="align-items:flex-end"><div><span class="small muted">Custo estimado</span><div class="price" id="cPrice">15 €</div></div><div style="text-align:right;max-width:55%"><span class="small muted">Prazo de entrega</span><div id="cTime" style="font-weight:600"></div></div></div>
+    <p class="xs muted" style="margin-top:14px">Valores da tabela publicada no portal RIAC. Validade: 5 anos até aos 25 anos de idade; 10 anos após os 25.</p></div>`;
+}
+function bindCC() {
+  const T = { n: { pt: [15, 18], ext: [20, 23] }, u: { pt: [30, 33], ext: [45, 48] }, x: { pt: [50, 53] } };
+  const upd = () => {
+    const a = $("#cAge").value, t = $("#cType").value; let d = $("#cDel").value;
+    $("#cDel").querySelector("[value=ext]").disabled = t === "x"; if (t === "x" && d === "ext") { $("#cDel").value = "pt"; d = "pt"; }
+    const first = $("#cFirst").checked && a === "y" && t === "n";
+    const p = first ? (d === "pt" ? 0 : 10) : T[t][d][a === "y" ? 0 : 1];
+    $("#cPrice").textContent = p === 0 ? "Gratuito" : p + " €";
+    $("#cTime").innerHTML = t === "n" ? "Carta PIN em até 30 dias" : t === "u" ? "4 dias úteis (São Miguel, Terceira, Faial, Pico, Santa Maria)<br>5 dias (Graciosa, São Jorge, Flores, Corvo)" : "No próprio dia (pedido até às 11h) ou no dia seguinte · levantamento em Lisboa ou Porto";
+  };
+  ["cAge","cType","cDel","cFirst"].forEach(id => $("#" + id).onchange = upd); upd();
+}
+
+/* ===================== SENHA DIGITAL ===================== */
+function viewSenha(parts, q) {
+  if (parts[1] === "ativa") return viewTicket(parts[2]);
+  const st = { isl: q.ilha || "São Miguel", loja: q.loja || "", fila: q.fila || "" };
+  if (st.loja) st.isl = lojaById(st.loja)?.ilha || st.isl;
+  const active = S.tickets.find(t => t.status === "ativa");
+  app().innerHTML = `<div class="wrap" style="max-width:920px">
+    <div class="crumbs"><a href="#/">Início</a> / Senha digital</div>
+    <div class="pagehead"><p class="eyebrow">Senha digital</p><h1>Tire a senha antes de sair de casa</h1><p class="muted" style="margin:0">Veja quantas pessoas estão à sua frente em cada loja e acompanhe a fila no telemóvel.</p></div>
+    ${active ? `<a class="alert ok" style="text-decoration:none;margin-bottom:20px" href="#/senha/ativa/${active.id}">${I("ticket")}<div><b>Já tem a senha ${active.num} ativa</b><br><span class="small">Toque para acompanhar.</span></div></a>` : ""}
+    <ol class="steps"><li class="on" id="s1">1. Loja</li><li id="s2">2. Assunto</li><li id="s3">3. Confirmar</li></ol>
+    <div id="sbody"></div></div>`;
+  const steps = n => ["s1","s2","s3"].forEach((id, i) => { $("#" + id).className = i < n ? "done" : i === n ? "on" : ""; });
+  const stepLoja = (pos) => {
+    steps(0);
+    $("#sbody").innerHTML = `<div class="row" style="margin-bottom:14px"><div style="flex:1;min-width:200px">${islandSelect("tIsl", st.isl, false)}</div><button class="btn sec" id="tLoc">${I("nav","sm")}Lojas perto de mim</button></div>
+      <div class="storelist" id="tList"></div>`;
+    const draw = (p) => {
+      let ls = LOJAS.filter(l => l.ilha === $("#tIsl").value);
+      if (p) ls = sortByDistance(LOJAS, p).slice(0, 8);
+      else ls.sort((a, b) => (avgWait(a) ?? 999) - (avgWait(b) ?? 999));
+      $("#tList").innerHTML = ls.map(l => { const w = avgWait(l); return `<button class="store" data-l="${l.id}"><span class="pin">${I("pin")}</span><span style="flex:1"><h4>${esc(l.nome)}</h4><span class="small muted">${esc(l.local)}${l.km != null ? ` · ${l.km} km` : ""}</span><br><span class="xs" style="color:${w == null ? "var(--muted)" : "var(--green)"}">${openStatus(l).label}</span></span>${waitTag(w)}</button>`; }).join("");
+    };
+    $("#tIsl").onchange = e => { st.isl = e.target.value; draw(); };
+    $("#tLoc").onclick = () => locate(draw);
+    $("#tList").onclick = e => { const b = e.target.closest("[data-l]"); if (b) { st.loja = b.dataset.l; stepFila(); } };
+    draw(pos);
+  };
+  const stepFila = () => {
+    steps(1); const l = lojaById(st.loja); const s0 = openStatus(l);
+    if (!s0.open) {
+      $("#sbody").innerHTML = `<div class="card" style="text-align:center;padding:36px"><span class="tag off" style="margin-bottom:10px"><span class="dot"></span>${esc(s0.label)}</span><h2>${esc(l.nome)} está fechada neste momento</h2><p class="muted">As senhas digitais ficam disponíveis durante o horário de funcionamento (${esc(l.h.label)}). Pode marcar já o seu atendimento para outro dia.</p>
+        <div class="row" style="justify-content:center"><button class="btn sec" id="bk">${I("left","sm")}Escolher outra loja</button><a class="btn pri" href="#/agendar?loja=${l.id}">${I("calendar")}Marcar atendimento</a></div></div>`;
+      $("#bk").onclick = () => stepLoja(); return;
+    }
+    $("#sbody").innerHTML = `<div class="row sb" style="margin-bottom:14px"><div><b>${esc(l.nome)}</b><br><span class="small muted">${esc(s0.label)}</span></div><button class="btn ghost sm" id="bk">${I("left","sm")}Mudar de loja</button></div>
+      <p class="small muted">Escolha o assunto. Os números são atualizados a cada minuto.</p>
+      <div class="queues">${filasFor(l).map(f => { const w = waitFor(l, f); return `<button class="queue" data-f="${f}" ${st.fila === f ? 'style="border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-100)"' : ""}><span class="letter">${f}</span><span style="flex:1"><b>${FILAS[f]}</b><br><span class="small muted">A ser atendida: <b>${w.served}</b> · ${w.ahead} ${w.ahead === 1 ? "pessoa" : "pessoas"} à frente</span></span>${waitTag(w.mins)}</button>`; }).join("")}</div>`;
+    $("#bk").onclick = () => stepLoja();
+    $(".queues").onclick = e => { const b = e.target.closest("[data-f]"); if (b) { st.fila = b.dataset.f; stepConf(); } };
+  };
+  const stepConf = () => {
+    steps(2); const l = lojaById(st.loja); const w = waitFor(l, st.fila);
+    const leave = Math.max(0, w.mins - 10);
+    $("#sbody").innerHTML = `<div class="grid g2" style="align-items:start">
+      <div class="card"><h3>Resumo</h3><dl class="kv" style="margin:12px 0 18px"><dt>Loja</dt><dd>${esc(l.nome)}</dd><dt>Assunto</dt><dd>${FILAS[st.fila]}</dd><dt>Pessoas à frente</dt><dd>${w.ahead}</dd><dt>Espera estimada</dt><dd>${w.mins ? "~" + w.mins + " min" : "Sem espera"}</dd></dl>
+        <div class="alert info">${I("clock")}<div class="small">${w.mins > 15 ? `Pode sair de casa daqui a cerca de <b>${leave} min</b>. Avisamos quando faltarem 3 pessoas.` : "A espera é curta — dirija-se já à loja."}</div></div></div>
+      <div class="card"><h3>Avisos</h3><p class="small muted">Como quer ser avisado quando estiver perto da sua vez?</p>
+        <div class="radios" style="margin-bottom:14px"><label class="radio"><input type="radio" name="nt" value="app" checked>Notificação neste dispositivo</label><label class="radio"><input type="radio" name="nt" value="sms">SMS</label></div>
+        <div class="field" id="smsF" hidden><label class="f" for="tel">Telemóvel</label><input class="inp" id="tel" type="tel" inputmode="tel" placeholder="9xx xxx xxx" autocomplete="tel"><p class="hint">Simulação: nenhuma mensagem é enviada.</p></div>
+        <div class="row"><button class="btn sec" id="bk">Voltar</button><button class="btn pri" id="take" style="flex:1">${I("ticket")}Tirar senha</button></div></div></div>`;
+    $$("[name=nt]").forEach(r => r.onchange = () => $("#smsF").hidden = r.value !== "sms" || !r.checked);
+    $("#bk").onclick = stepFila;
+    $("#take").onclick = () => {
+      if ($("[name=nt]:checked").value === "sms" && !/^9\d{8}$/.test($("#tel").value.replace(/\s/g, ""))) { toast("Indique um número de telemóvel válido (9 dígitos)."); $("#tel").focus(); return; }
+      S.tickets.forEach(t => { if (t.status === "ativa") t.status = "substituída"; });
+      const t = { id: code("T", 5), loja: l.id, fila: st.fila, num: st.fila + pad(w.next, 3), ahead: w.ahead, start: w.ahead, served: w.served, created: Date.now(), status: "ativa", alert: true };
+      S.tickets.unshift(t); save(); go("#/senha/ativa/" + t.id);
+    };
+  };
+  st.loja ? (st.fila ? stepConf() : stepFila()) : stepLoja();
+}
+
+function viewTicket(id) {
+  const t = S.tickets.find(x => x.id === id); if (!t) return go("#/senha");
+  const l = lojaById(t.loja);
+  const render = () => {
+    const mins = t.ahead * PER[t.fila];
+    const pct = t.start ? (1 - t.ahead / t.start) * 100 : 100;
+    app().innerHTML = `<div class="wrap" style="max-width:520px;padding-top:28px;padding-bottom:40px">
+      <h1 class="sr">Senha ${t.num}</h1>
+      <div class="ticket">
+        <div class="tt"><div class="row sb"><span class="small" style="opacity:.85">${esc(l.nome)}</span><span class="tag" style="background:rgba(255,255,255,.15);color:#fff">${t.status === "ativa" ? (t.ahead ? "Em espera" : "Chamada") : t.status}</span></div>
+          <div class="num" aria-live="polite">${t.num}</div><div class="small" style="opacity:.85">${FILAS[t.fila]}</div></div>
+        <div class="tb">
+          ${t.status === "ativa" && t.ahead === 0 ? `<div class="callnow" role="alert">É a sua vez! Dirija-se ao balcão ${1 + hs(t.id) % 4}.</div>` : t.status === "ativa" ? `<div class="stat"><div><b>${t.ahead}</b><span>à sua frente</span></div><div><b>~${mins}</b><span>minutos</span></div><div><b>${t.served}</b><span>a ser atendida</span></div></div>
+            <div class="progress" style="margin-top:16px"><i style="width:${pct}%"></i></div>` : `<p class="muted" style="margin:0">Esta senha já não está ativa.</p>`}
+        </div>
+        <div class="perf"></div>
+        <div class="tb row" style="gap:18px;align-items:center">${qr(t.id)}<div class="small"><b>Mostre este código à entrada</b> ou indique o número ${t.num} no balcão.<br><span class="muted xs">Senha emitida às ${new Date(t.created).toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" })}</span></div></div>
+      </div>
+      ${t.status === "ativa" ? `<div class="card" style="margin-top:16px">
+        <label class="check" style="margin:0 0 12px;border:0;padding:0"><input type="checkbox" id="al" ${t.alert ? "checked" : ""}><span><b>Avisar-me quando faltarem 3 pessoas</b><br><span class="small muted">Notificação neste dispositivo</span></span></label>
+        <div class="row"><a class="btn sec" href="${mapsUrl(l)}" target="_blank" rel="noopener">${I("nav","sm")}Como chegar</a><button class="btn danger" id="cx">${I("x","sm")}Cancelar senha</button></div></div>
+        <p class="xs muted" style="text-align:center;margin-top:12px">Demonstração: a fila avança de forma acelerada (uma pessoa a cada 6 segundos).</p>` : `<div class="row" style="justify-content:center;margin-top:16px"><a class="btn pri" href="#/senha">Tirar nova senha</a></div>`}
+      ${t.ahead === 0 && t.status === "ativa" ? `<div class="row" style="justify-content:center;margin-top:12px"><button class="btn sec" id="fin">${I("check","sm")}Fui atendido</button></div>` : ""}
+    </div>`;
+    const al = $("#al"); if (al) al.onchange = () => { t.alert = al.checked; save(); };
+    const cx = $("#cx"); if (cx) cx.onclick = async () => { if (await confirmBox("Cancelar a senha?", `A senha ${t.num} será libertada e perde a sua posição na fila.`, "Cancelar senha", true)) { t.status = "cancelada"; save(); toast("Senha cancelada."); render(); } };
+    const fin = $("#fin"); if (fin) fin.onclick = () => { t.status = "concluída"; save(); rateModal(l); render(); };
+  };
+  render();
+  if (t.status === "ativa" && t.ahead > 0) timers.push(setInterval(() => {
+    if (t.ahead > 0) { t.ahead--; t.served = t.fila + pad(parseInt(t.num.slice(1)) - t.ahead - 1, 3); save(); render();
+      if (t.alert && t.ahead === 3) toast(`Faltam 3 pessoas para a senha ${t.num}. Dirija-se à loja.`);
+      if (t.ahead === 0) { toast(`É a sua vez: ${t.num}`); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} clearTimers(); } }
+  }, 6000));
+}
+function rateModal(l) {
+  const bg = document.createElement("div"); bg.className = "modal-bg";
+  bg.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="rt"><h3 id="rt">Como correu o atendimento?</h3><p class="small muted">${esc(l.nome)} · a sua opinião ajuda-nos a melhorar.</p>
+    <div class="row" id="stars" style="gap:4px;margin:10px 0 14px">${[1,2,3,4,5].map(n => `<button class="btn ghost" data-n="${n}" aria-label="${n} estrelas" style="padding:6px">${I("star")}</button>`).join("")}</div>
+    <textarea class="inp" placeholder="Comentário (opcional)" aria-label="Comentário"></textarea><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn sec" data-c>Agora não</button><button class="btn pri" data-s>Enviar</button></div></div>`;
+  document.body.appendChild(bg);
+  let v = 0; $("#stars", bg).onclick = e => { const b = e.target.closest("[data-n]"); if (!b) return; v = +b.dataset.n; $$("#stars button", bg).forEach(x => x.style.color = +x.dataset.n <= v ? "#d79a06" : ""); $$("#stars svg", bg).forEach((s, i) => s.style.fill = i < v ? "#f2b705" : "none"); };
+  $("[data-c]", bg).onclick = () => bg.remove();
+  $("[data-s]", bg).onclick = () => { bg.remove(); toast(v ? "Obrigado pela sua avaliação!" : "Obrigado!"); };
+}
+
+/* ===================== AGENDAMENTO ===================== */
+function viewAgendar(_, q) {
+  const re = q.remarcar ? S.bookings.find(b => b.id === q.remarcar) : null;
+  const st = { step: 0, servico: q.servico || re?.servico || "", loja: q.loja || re?.loja || "", date: "", time: null, isl: "", month: null };
+  if (st.loja) st.isl = lojaById(st.loja).ilha;
+  if (st.servico) st.step = 1; if (st.servico && st.loja) st.step = 2;
+  const labels = ["Serviço", "Loja", "Data e hora", "Os seus dados", "Confirmação"];
+  app().innerHTML = `<div class="wrap" style="max-width:980px">
+    <div class="crumbs"><a href="#/">Início</a> / Agendamentos</div>
+    <div class="pagehead"><p class="eyebrow">${re ? "Remarcar " + re.id : "Agendamento"}</p><h1>${re ? "Escolha uma nova data" : "Marque o seu atendimento"}</h1><p class="muted" style="margin:0">Atendimento à hora marcada, sem filas. Recebe confirmação e um lembrete na véspera.</p></div>
+    <ol class="steps" id="stp">${labels.map((x, i) => `<li>${i + 1}. ${x}</li>`).join("")}</ol>
+    <div id="abody"></div></div>`;
+  const draw = () => {
+    $$("#stp li").forEach((li, i) => li.className = i < st.step ? "done" : i === st.step ? "on" : "");
+    [stepS, stepL, stepD, stepF][st.step]();
+    $("#abody").scrollIntoView({ block: "nearest" });
+  };
+  const back = () => `<button class="btn ghost sm" id="back">${I("left","sm")}Voltar</button>`;
+  const bindBack = () => { const b = $("#back"); if (b) b.onclick = () => { st.step--; draw(); }; };
+  const summary = () => `<div class="row small" style="gap:6px;margin-bottom:14px;flex-wrap:wrap">${st.servico ? `<span class="tag blue">${esc(svcById(st.servico).nome)}</span>` : ""}${st.loja ? `<span class="tag">${esc(lojaById(st.loja).nome)}</span>` : ""}${st.date ? `<span class="tag vio">${fmtDate(parseYmd(st.date))}${st.time != null ? ", " + fmtMin(st.time) : ""}</span>` : ""}</div>`;
+
+  function stepS() {
+    const list = SERVICOS.filter(s => s.modos.includes("agendar"));
+    $("#abody").innerHTML = `<div class="search" style="max-width:none;margin-bottom:14px"><span style="position:absolute;left:16px;top:14px;color:var(--muted)">${I("search")}</span><input class="inp" id="aq" style="padding-left:48px" placeholder="Que serviço pretende?" aria-label="Pesquisar serviço"></div>
+      <div class="grid g2" id="al"></div>`;
+    const d = () => { const n = norm($("#aq").value); $("#al").innerHTML = list.filter(s => !n || norm(s.nome).includes(n)).map(s => `<button class="store" data-s="${s.id}"><span class="pin">${I(temaById(s.tema).ic)}</span><span><h4>${esc(s.nome)}</h4><span class="small muted">${temaById(s.tema).nome} · ${s.dur}${s.pub === "emp" ? " · Empresas" : ""}</span></span></button>`).join(""); };
+    $("#aq").oninput = d; d();
+    $("#al").onclick = e => { const b = e.target.closest("[data-s]"); if (b) { st.servico = b.dataset.s; if (st.loja && svcById(st.servico).pub === "emp" && !lojaById(st.loja).riae) st.loja = ""; st.step = 1; draw(); } };
+  }
+  function stepL() {
+    const sv = svcById(st.servico);
+    $("#abody").innerHTML = `${summary()}<div class="row sb" style="margin-bottom:12px">${back()}<button class="btn sec sm" id="lLoc">${I("nav","sm")}Perto de mim</button></div>
+      ${sv.pub === "emp" ? `<div class="alert info" style="margin-bottom:12px">${I("building")}<div class="small">Os serviços para empresas são prestados nas lojas <b>RIAC-RIAE</b>, com técnicos especializados.</div></div>` : ""}
+      <div style="margin-bottom:12px">${islandSelect("lIsl", st.isl || "São Miguel", false)}</div><div class="storelist" id="ll"></div>`;
+    bindBack();
+    const d = (pos) => {
+      let ls = LOJAS.filter(l => (sv.pub !== "emp" || l.riae));
+      ls = pos ? sortByDistance(ls, pos).slice(0, 8) : ls.filter(l => l.ilha === $("#lIsl").value);
+      $("#ll").innerHTML = ls.length ? ls.map(l => { const nxt = nextFree(l); return `<button class="store" data-l="${l.id}" aria-pressed="${st.loja === l.id}"><span class="pin">${I(l.riae ? "building" : "pin")}</span><span style="flex:1"><h4>${esc(l.nome)}</h4><span class="small muted">${esc(l.morada)}${l.km != null ? ` · ${l.km} km` : ""}</span><br><span class="xs muted">${esc(l.h.label)}</span></span>${nxt ? `<span class="tag on">Próx.: ${nxt}</span>` : ""}</button>`; }).join("") : `<div class="empty">Não há lojas RIAE nesta ilha. Escolha outra ilha ou use «Perto de mim».</div>`;
+    };
+    $("#lIsl").onchange = e => { st.isl = e.target.value; d(); }; $("#lLoc").onclick = () => locate(d);
+    $("#ll").onclick = e => { const b = e.target.closest("[data-l]"); if (b) { st.loja = b.dataset.l; st.date = ""; st.time = null; st.step = 2; draw(); } };
+    d();
+  }
+  function nextFree(l) {
+    const n = azNow(); for (let i = 0; i < 30; i++) { const d = new Date(n.getFullYear(), n.getMonth(), n.getDate() + i); const s = slotsFor(l, d).find(x => x.free); if (s) return (i === 0 ? "hoje" : i === 1 ? "amanhã" : `${d.getDate()}/${d.getMonth() + 1}`) + " " + fmtMin(s.t); } return null;
+  }
+  function stepD() {
+    const l = lojaById(st.loja); const now = azNow();
+    if (!st.month) st.month = new Date(now.getFullYear(), now.getMonth(), 1);
+    if (!st.date) { for (let i = 0; i < 60; i++) { const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i); if (["many","few"].includes(dayAvail(l, d))) { st.date = ymd(d); st.month = new Date(d.getFullYear(), d.getMonth(), 1); break; } } }
+    const m = st.month, first = (m.getDay() + 6) % 7, days = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
+    const minM = new Date(now.getFullYear(), now.getMonth(), 1), maxM = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+    let cells = ""; for (let i = 0; i < first; i++) cells += "<td></td>";
+    for (let dd = 1; dd <= days; dd++) {
+      const d = new Date(m.getFullYear(), m.getMonth(), dd), a = dayAvail(l, d), k = ymd(d);
+      const col = { many: "var(--green)", few: "var(--amber)", full: "var(--line-2)" }[a];
+      const dis = !["many","few"].includes(a);
+      cells += `<td><button class="day ${k === ymd(now) ? "today" : ""}" data-d="${k}" ${dis ? "disabled" : ""} aria-pressed="${st.date === k}" aria-label="${fmtDate(d)}${a === "full" ? ", esgotado" : a === "few" ? ", poucas vagas" : a === "many" ? ", com vagas" : ", indisponível"}">${dd}${col && !dis ? `<span class="av" style="background:${st.date === k ? "#fff" : col}"></span>` : a === "full" ? `<span class="av" style="background:var(--line-2)"></span>` : ""}</button></td>`;
+      if ((first + dd) % 7 === 0) cells += "</tr><tr>";
+    }
+    const slots = st.date ? slotsFor(l, parseYmd(st.date)) : [];
+    $("#abody").innerHTML = `${summary()}<div style="margin-bottom:12px">${back()}</div>
+      <div class="grid g2" style="align-items:start">
+        <div class="cal"><div class="mh"><button class="btn ghost sm" id="pm" ${m <= minM ? "disabled" : ""} aria-label="Mês anterior">${I("left")}</button><b>${MESES[m.getMonth()]} ${m.getFullYear()}</b><button class="btn ghost sm" id="nm" ${m >= maxM ? "disabled" : ""} aria-label="Mês seguinte">${I("right")}</button></div>
+          <table role="grid"><thead><tr>${["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(x => `<th>${x}</th>`).join("")}</tr></thead><tbody><tr>${cells}</tr></tbody></table>
+          <div class="legend"><span><i class="dot" style="color:var(--green)"></i>Com vagas</span><span><i class="dot" style="color:var(--amber)"></i>Poucas vagas</span><span><i class="dot" style="color:var(--line-2)"></i>Esgotado</span></div></div>
+        <div class="card"><h3 style="text-transform:none">${st.date ? fmtDate(parseYmd(st.date)) : "Escolha um dia"}</h3>
+          ${st.date ? `<p class="small muted">${slots.filter(s => s.free).length} horários livres · atendimento de 20 min · hora dos Açores</p>
+          ${["Manhã","Tarde","Noite"].map((lab, i) => { const ss = slots.filter(s => i === 0 ? s.t < 780 : i === 1 ? s.t >= 780 && s.t < 1080 : s.t >= 1080); return ss.length ? `<p class="xs muted" style="margin:14px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">${lab}</p><div class="slots">${ss.map(s => `<button class="slot" data-t="${s.t}" ${s.free ? "" : "disabled"} aria-pressed="${st.time === s.t}">${fmtMin(s.t)}</button>`).join("")}</div>` : ""; }).join("")}` : `<p class="muted small">Os dias com vagas estão assinalados a verde.</p>`}
+          <button class="btn pri block" id="nx" style="margin-top:18px" ${st.time == null ? "disabled" : ""}>Continuar ${I("arrow","sm")}</button></div>
+      </div>`;
+    bindBack();
+    $("#pm").onclick = () => { st.month = new Date(m.getFullYear(), m.getMonth() - 1, 1); stepD(); };
+    $("#nm").onclick = () => { st.month = new Date(m.getFullYear(), m.getMonth() + 1, 1); stepD(); };
+    $(".cal tbody").onclick = e => { const b = e.target.closest("[data-d]"); if (b && !b.disabled) { st.date = b.dataset.d; st.time = null; stepD(); } };
+    $$(".slot").forEach(b => b.onclick = () => { st.time = +b.dataset.t; $$(".slot").forEach(x => x.setAttribute("aria-pressed", x === b)); $("#nx").disabled = false; });
+    $("#nx").onclick = () => { if (re) return finish(); st.step = 3; draw(); };
+  }
+  function stepF() {
+    const u = S.user || {};
+    $("#abody").innerHTML = `${summary()}<div style="margin-bottom:12px">${back()}</div>
+      <form class="card" id="fd" novalidate style="max-width:640px">
+        ${S.user ? `<div class="alert ok" style="margin-bottom:16px">${I("check")}<div class="small">Dados preenchidos a partir da sua área pessoal.</div></div>` : `<div class="alert info" style="margin-bottom:16px">${I("user")}<div class="small">Tem conta? <a href="#/conta">Entre</a> para preencher automaticamente e gerir as marcações.</div></div>`}
+        <div class="field"><label class="f" for="fn">Nome completo</label><input class="inp" id="fn" autocomplete="name" value="${esc(u.nome || "")}" required></div>
+        <div class="grid g2"><div class="field"><label class="f" for="fe">E-mail</label><input class="inp" id="fe" type="email" autocomplete="email" value="${esc(u.email || "")}" required></div>
+        <div class="field"><label class="f" for="fp">Telemóvel</label><input class="inp" id="fp" type="tel" inputmode="tel" autocomplete="tel" placeholder="9xx xxx xxx" value="${esc(u.tel || "")}"><p class="hint">Para o lembrete por SMS (opcional).</p></div></div>
+        <div class="field"><label class="f" for="fo">Observações <span class="muted">(opcional)</span></label><textarea class="inp" id="fo" placeholder="Ex.: preciso de acessibilidade, venho acompanhado…"></textarea></div>
+        <label class="check"><input type="checkbox" id="fc"><span class="small">Autorizo o tratamento dos meus dados para gestão desta marcação, nos termos da política de privacidade.</span></label>
+        <div id="ferr" class="err" role="alert"></div>
+        <button class="btn pri block" style="margin-top:12px">${I("check")}Confirmar marcação</button>
+      </form>`;
+    bindBack();
+    $("#fd").onsubmit = e => {
+      e.preventDefault(); const er = [];
+      if ($("#fn").value.trim().length < 3) er.push("Indique o seu nome.");
+      if (!/^\S+@\S+\.\S+$/.test($("#fe").value)) er.push("Indique um e-mail válido.");
+      if ($("#fp").value && !/^9\d{8}$/.test($("#fp").value.replace(/\s/g, ""))) er.push("O telemóvel deve ter 9 dígitos e começar por 9.");
+      if (!$("#fc").checked) er.push("É necessário aceitar o tratamento de dados.");
+      $("#ferr").innerHTML = er.join("<br>"); if (er.length) return;
+      finish({ nome: $("#fn").value.trim(), email: $("#fe").value.trim(), tel: $("#fp").value.trim(), obs: $("#fo").value.trim() });
+    };
+  }
+  function finish(data) {
+    let b;
+    if (re) { Object.assign(re, { date: st.date, time: st.time, loja: st.loja }); b = re; }
+    else { b = { id: code("RIAC-"), servico: st.servico, loja: st.loja, date: st.date, time: st.time, status: "confirmada", created: Date.now(), ...data }; S.bookings.unshift(b); }
+    save(); st.step = 4; $$("#stp li").forEach((li, i) => li.className = i < 4 ? "done" : "on");
+    const l = lojaById(b.loja), sv = svcById(b.servico);
+    $("#abody").innerHTML = `<div class="card" style="text-align:center;padding:36px 24px;max-width:640px;margin:0 auto">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--green-50);color:var(--green);display:grid;place-items:center;margin:0 auto 14px">${I("check")}</div>
+      <h2>${re ? "Marcação alterada" : "Marcação confirmada"}</h2><p class="muted">Enviámos a confirmação para ${esc(b.email || "o seu e-mail")}.<br><span class="xs">(Simulação — nada é enviado.)</span></p>
+      <div class="card" style="text-align:left;background:var(--surface-2);border:0;margin:18px 0"><dl class="kv"><dt>Referência</dt><dd>${b.id}</dd><dt>Serviço</dt><dd>${esc(sv.nome)}</dd><dt>Quando</dt><dd>${fmtDate(parseYmd(b.date))}, ${fmtMin(b.time)}</dd><dt>Onde</dt><dd>${esc(l.nome)}<br><span class="small muted">${esc(l.morada)}, ${l.cp} ${esc(l.local)}</span></dd></dl></div>
+      <div class="row" style="justify-content:center"><button class="btn pri" id="ic">${I("download","sm")}Adicionar ao calendário</button><a class="btn sec" href="#/servico/${sv.id}">${I("doc","sm")}Ver documentos necessários</a><a class="btn ghost" href="#/conta">As minhas marcações</a></div>
+      <p class="xs muted" style="margin-top:16px">Chegue 5 minutos antes. Pode alterar ou cancelar até 2 horas antes na sua área pessoal.</p></div>`;
+    $("#ic").onclick = () => ics(b);
+  }
+  draw();
+}
+
+/* ===================== LOJAS ===================== */
+let leafletP = null;
+function loadLeaflet() {
+  if (window.L) return Promise.resolve();
+  if (leafletP) return leafletP;
+  leafletP = new Promise((res, rej) => {
+    const c = document.createElement("link"); c.rel = "stylesheet"; c.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"; document.head.appendChild(c);
+    const s = document.createElement("script"); s.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s);
+    setTimeout(() => rej(new Error("timeout")), 9000);
+  });
+  return leafletP;
+}
+const pinIcon = (sel) => window.L.divIcon({ className: "", html: `<div style="width:${sel ? 30 : 22}px;height:${sel ? 30 : 22}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${sel ? "#122033" : "#0b5574"};border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>`, iconSize: [26, 26], iconAnchor: [13, 26] });
+
+function viewLojas(_, q) {
+  const st = { isl: q.ilha || "", txt: "", open: false, riae: !!q.riae };
+  app().innerHTML = `<div class="wrap">
+    <div class="crumbs"><a href="#/">Início</a> / Lojas</div>
+    <div class="pagehead"><h1>Encontre a loja mais perto de si</h1><p class="muted" style="margin:0">55 lojas nas nove ilhas, com horários, espera atual e indicações.</p></div>
+    <div class="grid" style="grid-template-columns:1fr 200px auto;gap:12px;margin-bottom:12px" id="lf">
+      <input class="inp" id="lt" type="search" placeholder="Pesquisar por localidade ou nome" aria-label="Pesquisar lojas">
+      ${islandSelect("li", st.isl, true)}
+      <button class="btn sec" id="lloc">${I("nav","sm")}Perto de mim</button>
+    </div>
+    <div class="chips" style="margin:0 0 16px"><button class="chip" id="lo" aria-pressed="false">Abertas agora</button><button class="chip" id="lr" aria-pressed="${st.riae}">Atendimento a empresas (RIAE)</button></div>
+    <div class="mapwrap" style="margin-bottom:40px"><div><p class="small muted" id="lc" aria-live="polite"></p><div class="storelist" id="ls"></div></div><div id="map" role="region" aria-label="Mapa das lojas"></div></div></div>`;
+  let map, markers = {}, pos = null;
+  const filtered = () => {
+    let ls = LOJAS.filter(l => (!st.isl || l.ilha === st.isl) && (!st.txt || norm(l.nome + l.local + l.morada).includes(norm(st.txt))) && (!st.open || openStatus(l).open) && (!st.riae || l.riae));
+    if (pos) ls = sortByDistance(ls, pos);
+    return ls;
+  };
+  const draw = () => {
+    const ls = filtered();
+    $("#lc").textContent = `${ls.length} ${ls.length === 1 ? "loja" : "lojas"}`;
+    $("#ls").innerHTML = ls.length ? ls.map(l => storeRow(l).replace('<a class="store"', `<a class="store" data-id="${l.id}"`)).join("") : `<div class="empty">Nenhuma loja corresponde aos filtros.</div>`;
+    if (map) {
+      Object.entries(markers).forEach(([id, m]) => { const show = ls.some(l => l.id === id); show ? m.addTo(map) : m.remove(); });
+      if (ls.length) map.fitBounds(window.L.latLngBounds(ls.map(l => [l.lat, l.lng])).pad(0.2), { maxZoom: 13 });
+    }
+  };
+  $("#lt").oninput = e => { st.txt = e.target.value; draw(); };
+  $("#li").onchange = e => { st.isl = e.target.value; draw(); };
+  $("#lo").onclick = e => { st.open = !st.open; e.target.setAttribute("aria-pressed", st.open); draw(); };
+  $("#lr").onclick = e => { st.riae = !st.riae; e.target.setAttribute("aria-pressed", st.riae); draw(); };
+  $("#lloc").onclick = () => locate(p => { pos = p; draw(); });
+  $("#ls").addEventListener("mouseover", e => { const a = e.target.closest("[data-id]"); if (a && markers[a.dataset.id]) Object.entries(markers).forEach(([id, m]) => m.setIcon(pinIcon(id === a.dataset.id))); });
+  draw();
+  loadLeaflet().then(() => {
+    if (!$("#map")) return;
+    map = window.L.map("map", { scrollWheelZoom: false }).setView([38.5, -28], 7);
+    window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(map);
+    LOJAS.forEach(l => { markers[l.id] = window.L.marker([l.lat, l.lng], { icon: pinIcon(false), title: l.nome }).bindPopup(`<b>${esc(l.nome)}</b><br>${esc(openStatus(l).label)}<br><a href="#/loja/${l.id}">Ver loja →</a>`); });
+    draw();
+  }).catch(() => { const m = $("#map"); if (m) m.innerHTML = `<div class="empty" style="height:100%;display:grid;place-items:center">O mapa precisa de ligação à internet.</div>`; });
+}
+
+function viewLoja(parts) {
+  const l = lojaById(parts[1]); if (!l) return go("#/lojas");
+  const st = openStatus(l); const today = azNow().getDay();
+  const bookable = SERVICOS.filter(s => s.modos.includes("presencial") || s.modos.includes("agendar")).filter(s => s.pub === "cid" || l.riae);
+  app().innerHTML = `<div class="wrap">
+    <div class="crumbs"><a href="#/">Início</a> / <a href="#/lojas">Lojas</a> / Ilha ${l.ilha === "Terceira" ? "Terceira" : "de " + l.ilha}</div>
+    <div class="pagehead"><div class="tags"><span class="tag ${st.open ? "on" : "off"}"><span class="dot"></span>${st.label}</span>${l.riae ? `<span class="tag blue">${I("building","sm")}Atendimento a empresas</span>` : ""}</div>
+      <h1 style="margin-top:12px">${esc(l.nome)}</h1><p class="muted" style="margin:0">${esc(l.morada)} · ${l.cp} ${esc(l.local)} · Ilha ${esc(l.ilha)}</p></div>
+    <div class="layout"><div>
+      <h2 style="font-size:1.3rem">Espera agora</h2>
+      <div class="queues" style="margin-bottom:28px">${filasFor(l).map(f => { const w = waitFor(l, f); return `<a class="queue" href="#/senha?loja=${l.id}&fila=${f}" style="text-decoration:none;color:inherit"><span class="letter">${f}</span><span style="flex:1"><b>${FILAS[f]}</b><br><span class="small muted">${w.closed ? "Senhas disponíveis no horário de funcionamento" : `A ser atendida ${w.served} · ${w.ahead} à frente`}</span></span>${waitTag(w.closed ? null : w.mins)}</a>`; }).join("")}</div>
+      <h2 style="font-size:1.3rem">Horário</h2>
+      <div class="card" style="margin-bottom:28px"><table style="width:100%;border-collapse:collapse">${[1,2,3,4,5,6,0].map(d => { const r = l.h.d[d]; return `<tr style="${d === today ? "font-weight:700;color:var(--primary)" : ""}"><td style="padding:7px 0;border-bottom:1px solid var(--line)">${DIAS[d]}${d === today ? " (hoje)" : ""}</td><td style="text-align:right;border-bottom:1px solid var(--line)">${r ? r.map(([a, b]) => fmtMin(a) + "–" + fmtMin(b)).join(" · ") : "Encerrada"}</td></tr>`; }).join("")}</table><p class="xs muted" style="margin:10px 0 0">Encerrada em feriados. Hora dos Açores.</p></div>
+      <h2 style="font-size:1.3rem">Serviços nesta loja</h2>
+      <div class="chips" style="margin-bottom:28px">${bookable.map(s => `<a class="chip" href="#/servico/${s.id}">${esc(s.nome.replace(/ \(.*\)/, ""))}</a>`).join("")}</div>
+    </div>
+    <aside class="sticky"><div class="card"><div id="map" style="height:220px;margin-bottom:14px"></div>
+      <div class="grid" style="gap:10px"><a class="btn pri block" href="#/senha?loja=${l.id}">${I("ticket")}Tirar senha aqui</a><a class="btn sec block" href="#/agendar?loja=${l.id}">${I("calendar")}Marcar atendimento</a><a class="btn ghost block" href="${mapsUrl(l)}" target="_blank" rel="noopener">${I("nav","sm")}Como chegar</a></div></div></aside></div></div>`;
+  loadLeaflet().then(() => {
+    if (!$("#map")) return; const m = window.L.map("map", { zoomControl: false, scrollWheelZoom: false }).setView([l.lat, l.lng], 14);
+    window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap" }).addTo(m);
+    window.L.marker([l.lat, l.lng], { icon: pinIcon(true) }).addTo(m);
+  }).catch(() => { $("#map").style.display = "none"; });
+  timers.push(setInterval(() => viewLoja(parts), 60000));
+}
+
+/* ===================== PEDIDOS ONLINE ===================== */
+function viewPedido(parts) {
+  const s = svcById(parts[1]); if (!s) return go("#/servicos");
+  const st = { step: 0, data: {}, files: [] };
+  app().innerHTML = `<div class="wrap" style="max-width:760px">
+    <div class="crumbs"><a href="#/">Início</a> / <a href="#/servico/${s.id}">${esc(s.nome)}</a> / Pedido online</div>
+    <div class="pagehead"><p class="eyebrow">Pedido online</p><h1>${esc(s.nome)}</h1><p class="muted" style="margin:0">Leva cerca de 5 minutos. Pode guardar e continuar mais tarde.</p></div>
+    <ol class="steps" id="ps"><li>1. Identificação</li><li>2. Pedido</li><li>3. Documentos</li><li>4. Revisão</li></ol><div id="pb"></div></div>`;
+  const steps = () => $$("#ps li").forEach((li, i) => li.className = i < st.step ? "done" : i === st.step ? "on" : "");
+  const isCert = s.tema === "certidoes" || s.id.startsWith("registo-criminal");
+  const isEmp = s.pub === "emp";
+  const nav = (lastLabel) => `<div class="row sb" style="margin-top:18px">${st.step ? `<button type="button" class="btn sec" id="pv">${I("left","sm")}Anterior</button>` : "<span></span>"}<button class="btn pri">${lastLabel || "Continuar"} ${I("arrow","sm")}</button></div>`;
+  const draw = () => {
+    steps(); const b = $("#pb"); const u = S.user || {};
+    if (st.step === 0) b.innerHTML = `<form class="card" id="pf">
+      ${S.user ? `<div class="alert ok" style="margin-bottom:16px">${I("check")}<div class="small">Autenticado como <b>${esc(u.nome)}</b>.</div></div>` : `<div class="alert info" style="margin-bottom:16px">${I("user")}<div class="small">Na versão final, a identificação é feita com Chave Móvel Digital ou Cartão de Cidadão. <button type="button" class="btn ghost sm" id="lg">Entrar (demonstração)</button></div></div>`}
+      ${isEmp ? `<div class="field"><label class="f" for="p1">Nome da empresa</label><input class="inp" id="p1" required value="${esc(st.data.p1 || "")}"></div><div class="field"><label class="f" for="p2">NIPC</label><input class="inp" id="p2" inputmode="numeric" maxlength="9" required value="${esc(st.data.p2 || "")}"></div>` : `<div class="field"><label class="f" for="p1">Nome completo</label><input class="inp" id="p1" autocomplete="name" required value="${esc(st.data.p1 || u.nome || "")}"></div>`}
+      <div class="field"><label class="f" for="p3">E-mail para notificações</label><input class="inp" id="p3" type="email" autocomplete="email" required value="${esc(st.data.p3 || u.email || "")}"></div>${nav()}</form>`;
+    if (st.step === 1) b.innerHTML = `<form class="card" id="pf">
+      ${isCert ? `<div class="field"><span class="f">Formato</span><div class="radios"><label class="radio"><input type="radio" name="fmt" value="Online (código de acesso)" checked>Online — código de acesso imediato</label><label class="radio"><input type="radio" name="fmt" value="Papel, levantamento em loja">Em papel — levantamento numa loja RIAC</label></div></div>
+        <div class="field"><label class="f" for="p4">Finalidade</label><select class="inp" id="p4"><option>Emprego</option><option>Concurso público</option><option>Licenciamento</option><option>Outra</option></select></div>`
+      : `<div class="field"><label class="f" for="p4">Tipo de pedido</label><select class="inp" id="p4"><option>Novo pedido</option><option>Renovação</option><option>Alteração de dados</option></select></div>`}
+      <div class="field"><label class="f" for="p5">Informação adicional <span class="muted">(opcional)</span></label><textarea class="inp" id="p5">${esc(st.data.p5 || "")}</textarea></div>${nav()}</form>`;
+    if (st.step === 2) b.innerHTML = `<form class="card" id="pf"><p class="small muted">Anexe os documentos indicados. Formatos PDF, JPG ou PNG até 10 MB.</p>
+      ${docsFor(s).map((d, i) => `<label class="check" style="cursor:pointer"><span style="color:var(--primary)">${I("upload")}</span><span style="flex:1"><b class="small">${esc(d)}</b><br><span class="xs muted" id="fl${i}">${st.files[i] ? esc(st.files[i]) : "Escolher ficheiro"}</span></span><input type="file" class="sr" data-i="${i}" accept=".pdf,.jpg,.jpeg,.png"></label>`).join("")}
+      <p class="xs muted">Protótipo: os ficheiros não saem do seu dispositivo.</p>${nav()}</form>`;
+    if (st.step === 3) b.innerHTML = `<form class="card" id="pf"><h3>Confirme os dados</h3><dl class="kv" style="margin:12px 0 18px">
+      <dt>Serviço</dt><dd>${esc(s.nome)}</dd><dt>${isEmp ? "Empresa" : "Requerente"}</dt><dd>${esc(st.data.p1)}</dd><dt>E-mail</dt><dd>${esc(st.data.p3)}</dd><dt>Pedido</dt><dd>${esc(st.data.fmt || st.data.p4)}</dd><dt>Documentos</dt><dd>${st.files.filter(Boolean).length} anexado(s)</dd><dt>Custo</dt><dd>${esc(s.custo)}</dd></dl>
+      <label class="check"><input type="checkbox" id="dc" required><span class="small">Declaro que as informações prestadas são verdadeiras.</span></label>${nav("Submeter pedido")}</form>`;
+    const lg = $("#lg"); if (lg) lg.onclick = () => { login(); draw(); };
+    const pv = $("#pv"); if (pv) pv.onclick = () => { st.step--; draw(); };
+    $$("input[type=file]").forEach(f => f.onchange = () => { const i = +f.dataset.i; st.files[i] = f.files[0]?.name; $("#fl" + i).textContent = st.files[i] || "Escolher ficheiro"; f.closest(".check").classList.toggle("done", !!st.files[i]); });
+    $("#pf").onsubmit = e => {
+      e.preventDefault();
+      if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+      ["p1","p2","p3","p4","p5"].forEach(k => { const el = $("#" + k); if (el) st.data[k] = el.value; });
+      const fm = $("[name=fmt]:checked"); if (fm) st.data.fmt = fm.value;
+      if (st.step < 3) { st.step++; draw(); return; }
+      const r = { id: "PED-" + azNow().getFullYear() + "-" + String(Math.floor(Math.random() * 90000) + 10000), servico: s.id, created: Date.now(), estado: 0, data: st.data };
+      S.requests.unshift(r); save();
+      $$("#ps li").forEach(li => li.className = "done");
+      b.innerHTML = `<div class="card" style="text-align:center;padding:36px 24px"><div style="width:64px;height:64px;border-radius:50%;background:var(--green-50);color:var(--green);display:grid;place-items:center;margin:0 auto 14px">${I("check")}</div>
+        <h2>Pedido submetido</h2><p class="muted">Referência <b>${r.id}</b>. Vai receber atualizações por e-mail e pode acompanhar o estado na sua área pessoal.</p>
+        ${/Gratuito|Sem custos/.test(s.custo) ? "" : `<div class="alert info" style="text-align:left;margin:16px 0">${I("card")}<div class="small">O pagamento é pedido quando o pedido for validado — por referência multibanco ou MB WAY.</div></div>`}
+        <div class="row" style="justify-content:center"><a class="btn pri" href="#/conta?tab=pedidos">Acompanhar pedido</a><a class="btn sec" href="#/">Voltar ao início</a></div></div>`;
+    };
+  };
+  draw();
+}
+
+/* ===================== PAGAMENTOS ===================== */
+function viewPagamentos() {
+  app().innerHTML = `<div class="wrap" style="max-width:760px">
+    <div class="crumbs"><a href="#/">Início</a> / Pagamentos</div>
+    <div class="pagehead"><p class="eyebrow">Pagamentos</p><h1>Pagar a fatura da eletricidade (EDA)</h1><p class="muted" style="margin:0">Consulte e pague a sua fatura em segundos, ou pague numa loja RIAC sem custos adicionais.</p></div>
+    <div class="alert" style="margin-bottom:18px">${I("info")}<div class="small"><b>Simulação.</b> Neste protótipo não é feita qualquer consulta nem transação real.</div></div>
+    <form class="card" id="pf"><div class="grid g2"><div class="field"><label class="f" for="cli">N.º de cliente EDA</label><input class="inp" id="cli" inputmode="numeric" placeholder="Ex.: 123456789" required pattern="\\d{6,10}"></div>
+      <div class="field"><label class="f" for="fat">N.º da fatura</label><input class="inp" id="fat" placeholder="Ex.: FT 2026/0123" required></div></div>
+      <button class="btn pri">${I("search","sm")}Consultar fatura</button></form><div id="pr" style="margin-top:16px"></div></div>`;
+  $("#pf").onsubmit = e => {
+    e.preventDefault(); if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+    const v = (20 + rnd($("#cli").value + $("#fat").value) * 90).toFixed(2).replace(".", ",");
+    $("#pr").innerHTML = `<div class="card"><div class="row sb"><div><span class="small muted">Valor em dívida</span><div class="price">${v} €</div><span class="small muted">Fatura ${esc($("#fat").value)} · vence a ${new Date(azNow().getTime() + 9 * 864e5).toLocaleDateString("pt-PT")}</span></div></div>
+      <h3 style="margin-top:20px">Como quer pagar?</h3><div class="radios"><label class="radio"><input type="radio" name="pm" value="mbway" checked>MB WAY</label><label class="radio"><input type="radio" name="pm" value="ref">Referência multibanco</label><label class="radio"><input type="radio" name="pm" value="loja">Numa loja RIAC (senha ou marcação)</label></div>
+      <button class="btn pri block" id="pay" style="margin-top:14px">Continuar</button><div id="pout" style="margin-top:14px"></div></div>`;
+    $("#pay").onclick = () => {
+      const m = $("[name=pm]:checked").value;
+      if (m === "loja") return go("#/senha?fila=C");
+      $("#pout").innerHTML = m === "ref" ? `<div class="alert info">${I("card")}<div><b>Demonstração</b><br><span class="small">Na versão final é gerada aqui uma referência multibanco válida por 72 h (entidade, referência e valor de ${v} €), que também fica guardada na sua área pessoal.</span></div></div>`
+        : `<div class="alert info">${I("phone")}<div><b>Demonstração</b><br><span class="small">Na versão final indica o número associado ao MB WAY e confirma o pagamento de ${v} € na aplicação do banco.</span></div></div>`;
+    };
+  };
+}
+
+/* ===================== ÁREA PESSOAL ===================== */
+function login() {
+  S.user = { nome: "Maria Medeiros", email: "maria.medeiros@exemplo.pt", tel: "" };
+  if (!S.requests.some(r => r.demo)) S.requests.push({ id: "PED-2026-48213", servico: "cartao-cidadao", created: Date.now() - 12 * 864e5, estado: 3, demo: 1, data: { p4: "Renovação" } });
+  save(); setNav(location.hash); toast("Sessão iniciada (demonstração).");
+}
+const ESTADOS = ["Submetido", "Em análise", "Em produção", "Pronto para levantamento", "Concluído"];
+function viewConta(_, q) {
+  if (!S.user) {
+    app().innerHTML = `<div class="wrap" style="max-width:560px;padding:48px 20px">
+      <div class="card" style="padding:32px"><p class="eyebrow">Área pessoal</p><h1 style="font-size:2rem">Entre na sua área pessoal</h1>
+      <p class="muted">Acompanhe pedidos, marcações e senhas, receba alertas de documentos a expirar e tenha os seus dados sempre preenchidos.</p>
+      <div class="grid" style="gap:10px;margin:22px 0"><button class="btn pri block" data-lg>${I("phone")}Entrar com Chave Móvel Digital</button><button class="btn sec block" data-lg>${I("id")}Entrar com Cartão de Cidadão</button></div>
+      <p class="xs muted" style="margin:0">Protótipo: ambos os botões iniciam uma sessão de demonstração. Não é pedida nenhuma credencial.</p></div></div>`;
+    $$("[data-lg]").forEach(b => b.onclick = () => { login(); viewConta(_, q); });
+    return;
+  }
+  const tab = q.tab || "inicio";
+  const bk = S.bookings.filter(b => b.status === "confirmada").sort((a, b) => (a.date + pad(a.time, 4)).localeCompare(b.date + pad(b.time, 4)));
+  const tk = S.tickets.slice(0, 8);
+  const tabs = [["inicio","Resumo"],["marcacoes",`Marcações (${bk.length})`],["pedidos",`Pedidos (${S.requests.length})`],["senhas","Senhas"],["definicoes","Definições"]];
+  app().innerHTML = `<div class="wrap">
+    <div class="crumbs"><a href="#/">Início</a> / Área pessoal</div>
+    <div class="pagehead row sb"><div><p class="eyebrow">Área pessoal</p><h1 style="margin:0">Olá, ${esc(S.user.nome.split(" ")[0])}</h1></div><button class="btn sec sm" id="out">Terminar sessão</button></div>
+    <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button role="tab" aria-selected="${tab === k}" data-k="${k}">${l}</button>`).join("")}</div>
+    <div id="cb" style="margin-bottom:40px"></div></div>`;
+  $("#out").onclick = () => { S.user = null; save(); setNav(location.hash); viewConta(_, {}); };
+  $$("[data-k]").forEach(b => b.onclick = () => go("#/conta?tab=" + b.dataset.k));
+  const bookingCard = b => { const l = lojaById(b.loja), s = svcById(b.servico); return `<div class="card"><div class="row sb"><span class="tag vio">${fmtDate(parseYmd(b.date))}, ${fmtMin(b.time)}</span><span class="xs muted">${b.id}</span></div><h3 style="margin:12px 0 2px">${esc(s.nome)}</h3><p class="small muted">${esc(l.nome)} · ${esc(l.morada)}</p>
+    <div class="row"><button class="btn sec sm" data-ics="${b.id}">${I("download","sm")}Calendário</button><a class="btn sec sm" href="#/agendar?remarcar=${b.id}">${I("calendar","sm")}Remarcar</a><button class="btn danger sm" data-cx="${b.id}">Cancelar</button></div></div>`; };
+  const reqCard = r => { const s = svcById(r.servico); return `<div class="card"><div class="row sb"><span class="tag ${r.estado >= 3 ? "on" : "blue"}">${ESTADOS[r.estado]}</span><span class="xs muted">${r.id}</span></div><h3 style="margin:12px 0 12px">${esc(s.nome)}${r.data?.p4 ? ` <span class="muted small">· ${esc(r.data.p4)}</span>` : ""}</h3>
+    <ol class="timeline">${ESTADOS.slice(0, 4).map((e, i) => `<li class="${i < r.estado ? "done" : i === r.estado ? "cur" : ""}"><b class="small">${e}</b>${i === r.estado ? `<br><span class="xs muted">${i === 3 ? "Disponível na RIAC Ponta Delgada. Traga o documento antigo." : "Atualizado " + new Date(r.created).toLocaleDateString("pt-PT")}</span>` : ""}</li>`).join("")}</ol>
+    ${r.estado === 3 ? `<a class="btn pri sm" href="#/agendar?servico=${s.id}&loja=pdl">${I("calendar","sm")}Marcar levantamento</a>` : ""}</div>`; };
+  const cb = $("#cb");
+  if (tab === "inicio") cb.innerHTML = `<div class="grid g2">
+    <div class="alert">${I("bell")}<div><b>O seu Cartão de Cidadão expira dentro de 74 dias</b><br><span class="small">Renove já para evitar ficar sem documento válido.</span><div class="row" style="margin-top:10px"><a class="btn pri sm" href="#/agendar?servico=cartao-cidadao">Marcar renovação</a><a class="btn sec sm" href="#/servico/cartao-cidadao">Ver custos</a></div></div></div>
+    <div class="card"><h3>Próxima marcação</h3>${bk[0] ? `<p style="margin:0"><b>${fmtDate(parseYmd(bk[0].date))}, ${fmtMin(bk[0].time)}</b><br><span class="small muted">${esc(svcById(bk[0].servico).nome)} · ${esc(lojaById(bk[0].loja).nome)}</span></p>` : `<p class="small muted">Não tem marcações. <a href="#/agendar">Marcar atendimento</a></p>`}</div>
+    </div><h2 style="font-size:1.3rem;margin-top:28px">Pedidos em curso</h2><div class="grid g2">${S.requests.filter(r => r.estado < 4).slice(0, 2).map(reqCard).join("") || `<div class="empty">Sem pedidos em curso.</div>`}</div>`;
+  if (tab === "marcacoes") cb.innerHTML = bk.length ? `<div class="grid g2">${bk.map(bookingCard).join("")}</div>` : `<div class="empty">Ainda não tem marcações.<br><a class="btn pri" style="margin-top:12px" href="#/agendar">Marcar atendimento</a></div>`;
+  if (tab === "pedidos") cb.innerHTML = S.requests.length ? `<div class="grid g2">${S.requests.map(reqCard).join("")}</div>` : `<div class="empty">Sem pedidos.</div>`;
+  if (tab === "senhas") cb.innerHTML = tk.length ? `<div class="grid g3">${tk.map(t => `<a class="card link" href="#/senha/ativa/${t.id}"><div class="row sb"><b style="font-size:1.6rem;font-family:var(--display)">${t.num}</b><span class="tag ${t.status === "ativa" ? "on" : ""}">${t.status}</span></div><p class="small muted" style="margin:6px 0 0">${esc(lojaById(t.loja).nome)} · ${new Date(t.created).toLocaleString("pt-PT", { dateStyle: "short", timeStyle: "short" })}</p></a>`).join("")}</div>` : `<div class="empty">Ainda não tirou senhas.<br><a class="btn pri" style="margin-top:12px" href="#/senha">Tirar senha</a></div>`;
+  if (tab === "definicoes") {
+    const a = S.alerts;
+    cb.innerHTML = `<div class="card" style="max-width:640px"><h3>Notificações</h3>${[["email","E-mail","Confirmações e estado dos pedidos"],["sms","SMS","Lembrete na véspera e aviso de senha"],["exp","Documentos a expirar","Aviso 90 dias antes"]].map(([k, l, d]) => `<label class="check"><input type="checkbox" data-a="${k}" ${a[k] !== false ? "checked" : ""}><span><b>${l}</b><br><span class="small muted">${d}</span></span></label>`).join("")}
+      <h3 style="margin-top:22px">Dados</h3><dl class="kv"><dt>Nome</dt><dd>${esc(S.user.nome)}</dd><dt>E-mail</dt><dd>${esc(S.user.email)}</dd></dl>
+      <button class="btn danger sm" id="wipe" style="margin-top:18px">Apagar todos os dados deste dispositivo</button></div>`;
+    cb.onchange = e => { const k = e.target.dataset.a; if (k) { S.alerts[k] = e.target.checked; save(); toast("Preferência guardada."); } };
+    $("#wipe").onclick = async () => { if (await confirmBox("Apagar dados?", "Marcações, senhas e pedidos de demonstração guardados neste dispositivo serão eliminados.", "Apagar", true)) { S.bookings = []; S.tickets = []; S.requests = []; S.user = null; S.checks = {}; save(); go("#/"); } };
+  }
+  cb.addEventListener("click", async e => {
+    const i = e.target.closest("[data-ics]"); if (i) ics(S.bookings.find(b => b.id === i.dataset.ics));
+    const c = e.target.closest("[data-cx]");
+    if (c && await confirmBox("Cancelar a marcação?", "O horário fica disponível para outra pessoa. Pode voltar a marcar a qualquer momento.", "Cancelar marcação", true)) { S.bookings.find(b => b.id === c.dataset.cx).status = "cancelada"; save(); toast("Marcação cancelada."); viewConta(_, q); }
+  });
+}
+
+/* ===================== CONTACTOS ===================== */
+function viewContactos() {
+  const lv = lineStatus();
+  app().innerHTML = `<div class="wrap">
+    <div class="crumbs"><a href="#/">Início</a> / Contactos</div>
+    <div class="pagehead"><h1>Fale connosco</h1><p class="muted" style="margin:0">Dúvidas, sugestões ou reclamações — escolha o canal que preferir.</p></div>
+    <div class="grid g3" style="margin-bottom:28px">
+      <div class="card"><span class="tag ${lv.open ? "on" : "off"}"><span class="dot"></span>${lv.open ? "Disponível agora" : "Fechada"}</span><h3 style="margin-top:12px">Linha Verde</h3><a href="tel:+351800500501" style="font-size:1.8rem;font-weight:700;text-decoration:none;display:block">800 500 501</a><p class="small muted">Chamada gratuita<br>Seg–sáb 09h00–22h00 · Dom 10h00–22h00<br>Feriados 10h00–18h00</p><button class="btn sec sm" id="cbk">${I("phone","sm")}Pedir que liguemos</button></div>
+      <div class="card"><h3>Assistente virtual</h3><p class="small muted">Respostas imediatas sobre serviços, horários, senhas e marcações — 24 horas por dia.</p><button class="btn pri sm" onclick="toggleChat(true)">${I("chat","sm")}Abrir assistente</button></div>
+      <div class="card"><h3>Lojas e RIAC Móvel</h3><p class="small muted">Atendimento presencial em 55 lojas e unidades móveis que se deslocam às freguesias.</p><a class="btn sec sm" href="#/lojas">${I("pin","sm")}Ver lojas</a></div>
+    </div>
+    <div class="layout"><form class="card" id="cf" novalidate><h2 style="font-size:1.4rem">Enviar mensagem</h2>
+      <div class="grid g2"><div class="field"><label class="f" for="cn">Nome</label><input class="inp" id="cn" autocomplete="name" value="${esc(S.user?.nome || "")}"></div><div class="field"><label class="f" for="ce">E-mail</label><input class="inp" id="ce" type="email" autocomplete="email" value="${esc(S.user?.email || "")}"></div></div>
+      <div class="field"><label class="f" for="ca">Assunto</label><select class="inp" id="ca"><option>Pedido de informação</option><option>Sugestão</option><option>Reclamação</option><option>Elogio</option><option>Acompanhamento de pedido</option></select></div>
+      <div class="field"><label class="f" for="cm">Mensagem</label><textarea class="inp" id="cm" rows="5"></textarea></div>
+      <div class="err" id="cerr" role="alert"></div><button class="btn pri">${I("mail","sm")}Enviar</button></form>
+      <aside class="card" id="opiniao"><h3>A sua opinião é importante</h3><p class="small muted">Como avalia a experiência no portal?</p>
+        <div class="grid" style="grid-template-columns:repeat(5,1fr);gap:6px" id="nps">${["😞","🙁","😐","🙂","😀"].map((x, i) => `<button class="btn sec" style="font-size:1.4rem;padding:8px 0" data-v="${i}" aria-label="Avaliação ${i + 1} de 5">${x}</button>`).join("")}</div><p class="small" id="npsr" style="margin-top:12px"></p></aside></div></div>`;
+  $("#cf").onsubmit = e => {
+    e.preventDefault(); const er = [];
+    if ($("#cn").value.trim().length < 2) er.push("Indique o seu nome."); if (!/^\S+@\S+\.\S+$/.test($("#ce").value)) er.push("Indique um e-mail válido."); if ($("#cm").value.trim().length < 10) er.push("Escreva uma mensagem com pelo menos 10 caracteres.");
+    $("#cerr").innerHTML = er.join("<br>"); if (er.length) return;
+    e.target.innerHTML = `<div style="text-align:center;padding:24px"><div style="width:56px;height:56px;border-radius:50%;background:var(--green-50);color:var(--green);display:grid;place-items:center;margin:0 auto 12px">${I("check")}</div><h3>Mensagem recebida</h3><p class="muted small">Referência ${code("MSG-")}. Respondemos em até 3 dias úteis.<br>(Simulação — nada foi enviado.)</p></div>`;
+  };
+  $("#cbk").onclick = () => toast("Pedido registado: ligamos nos próximos 15 minutos (simulação).");
+  $("#nps").onclick = e => { const b = e.target.closest("[data-v]"); if (!b) return; $$("#nps button").forEach(x => x.style.borderColor = x === b ? "var(--primary)" : ""); $("#npsr").textContent = +b.dataset.v >= 3 ? "Obrigado! Ainda bem que está a correr bem." : "Obrigado. O que podemos melhorar? Use o formulário ao lado."; };
+  if (location.hash.includes("opiniao")) setTimeout(() => $("#opiniao").scrollIntoView(), 50);
+}
+
+/* ===================== ASSISTENTE ===================== */
+let chatOpen = false;
+function toggleChat(force) {
+  chatOpen = typeof force === "boolean" ? force : !chatOpen;
+  let c = $("#chat");
+  if (!chatOpen) { c && c.remove(); $("#fab").setAttribute("aria-expanded", "false"); return; }
+  if (c) return;
+  document.body.insertAdjacentHTML("beforeend", `<section class="chat" id="chat" role="dialog" aria-label="Assistente RIAC">
+    <header><span class="brand"><span class="mark" style="width:30px;height:30px">${I("chat","sm")}</span></span><div style="flex:1"><b>Assistente RIAC</b><br><span class="xs muted">Demonstração · respostas automáticas</span></div><button class="btn ghost sm" id="chx" aria-label="Fechar">${I("x")}</button></header>
+    <div class="msgs" id="msgs" aria-live="polite"></div>
+    <form id="chf"><input id="chi" placeholder="Escreva a sua pergunta" aria-label="Mensagem" autocomplete="off"><button class="btn pri" aria-label="Enviar">${I("arrow")}</button></form></section>`);
+  $("#fab").setAttribute("aria-expanded", "true");
+  $("#chx").onclick = () => toggleChat(false);
+  bot("Olá! Sou o assistente da RIAC. Em que posso ajudar?", [["Tirar senha", "q:Quero tirar senha"], ["Marcar atendimento", "q:Quero marcar atendimento"], ["Preço do Cartão de Cidadão", "q:Quanto custa o cartão de cidadão?"], ["Horário da Linha Verde", "q:Horário da linha verde"]]);
+  $("#chf").onsubmit = e => { e.preventDefault(); const v = $("#chi").value.trim(); if (!v) return; $("#chi").value = ""; ask(v); };
+  $("#msgs").onclick = e => { const b = e.target.closest("[data-q]"); if (b) ask(b.dataset.q); const a = e.target.closest("a[href^='#']"); if (a && innerWidth < 640) toggleChat(false); };
+  $("#chi").focus();
+}
+function bot(text, acts = []) {
+  const m = $("#msgs"); if (!m) return;
+  m.insertAdjacentHTML("beforeend", `<div class="msg bot">${text}${acts.length ? `<div class="acts">${acts.map(([l, h]) => h.startsWith("q:") ? `<button class="chip" data-q="${esc(h.slice(2))}">${l}</button>` : `<a class="chip" href="${h}">${l}</a>`).join("")}</div>` : ""}</div>`);
+  m.scrollTop = m.scrollHeight;
+}
+function ask(v) {
+  $("#msgs").insertAdjacentHTML("beforeend", `<div class="msg me">${esc(v)}</div>`);
+  const n = norm(v);
+  setTimeout(() => {
+    if (/senha|fila|espera/.test(n)) return bot("Pode tirar a senha digital agora e acompanhar a fila no telemóvel. Avisamos quando faltarem 3 pessoas.", [["Tirar senha", "#/senha"], ["Ver espera nas lojas", "#/lojas"]]);
+    if (/marc|agend|hora marcada/.test(n)) return bot("Marque em 4 passos: serviço, loja, dia e hora. Recebe confirmação e lembrete.", [["Marcar atendimento", "#/agendar"]]);
+    if (/cartao.*cidad|\bcc\b/.test(n) && /cust|preco|quanto|valor/.test(n)) return bot("O Cartão de Cidadão custa <b>15 €</b> até aos 25 anos e <b>18 €</b> depois dos 25 (pedido normal). O pedido urgente custa 30 €/33 € e o extremamente urgente 50 €/53 €. O primeiro pedido de bebés até 1 ano é gratuito.", [["Calcular o meu caso", "#/servico/cartao-cidadao"], ["Marcar", "#/agendar?servico=cartao-cidadao"]]);
+    if (/linha verde|telefone|ligar|800/.test(n)) return bot(`A Linha Verde <b>800 500 501</b> é gratuita: segunda a sábado das 09h00 às 22h00, domingo das 10h00 às 22h00 e feriados das 10h00 às 18h00. Neste momento está ${lineStatus().open ? "<b>disponível</b>" : "<b>fechada</b>"}.`, [["Pedir que liguemos", "#/contactos"]]);
+    if (/horario|aberta|abre|fecha|loja|perto/.test(n)) return bot("A maioria das lojas abre de segunda a sexta, das 09h00 às 12h00 e das 13h00 às 16h30. A RIAC Parque Atlântico (Ponta Delgada) abre todos os dias, até às 22h00 durante a semana.", [["Lojas abertas agora", "#/lojas"]]);
+    if (/pedido|estado|acompanh/.test(n)) return bot("Pode acompanhar todos os seus pedidos na área pessoal, com o estado atualizado passo a passo.", [["Área pessoal", "#/conta?tab=pedidos"]]);
+    if (/pagar|eda|eletricidade|luz/.test(n)) return bot("Pode pagar a fatura da EDA online ou numa loja RIAC, sem custos adicionais.", [["Pagar fatura", "#/pagamentos"]]);
+    const r = searchSvc(v).slice(0, 3);
+    if (r.length) return bot("Encontrei estes serviços:", r.map(s => [s.nome.replace(/ \(.*\)/, ""), "#/servico/" + s.id]));
+    bot("Não tenho a certeza de ter percebido. Pode reformular, ou falar com um assistente pela Linha Verde 800 500 501 (gratuita).", [["Ver todos os serviços", "#/servicos"], ["Contactos", "#/contactos"]]);
+  }, 350);
+}
+
+/* ===================== INÍCIO DA APP ===================== */
+chrome();
+route();
+</script>
+</body>
+</html>
